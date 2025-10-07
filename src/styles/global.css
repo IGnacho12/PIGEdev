@@ -1,1 +1,23 @@
 @import "tailwindcss";
+
+:root {
+  --bg-dark: hsl(0 0% 90%);
+  --bg: hsl(0 0% 95%);
+  --bg-light: hsl(0 0% 100%);
+  --text: hsl(0 0% 5%);
+  --text-muted: hsl(0 0% 30%);
+  --border: hsl(0 0% 30%);
+  --gradient: linear-gradient(0deg, var(--bg-dark), var(--bg));
+  --gradient-hover: linear-gradient(0deg, var(--bg-dark) 95%, var(--bg));
+}
+
+/* Dark Mode */
+html.dark {
+  :root {
+    --bg-dark: hsl(0 0% 0%);
+    --bg: hsl(0 0% 5%);
+    --bg-light: hsl(0 0% 10%);
+    --text: hsl(0 0% 95%);
+    --text-muted: hsl(0 0% 70%);
+  }
+}
