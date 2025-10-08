@@ -1,48 +1,43 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 
 export default function ModeToggle() {
-  const [theme, setTheme] = useState("light")
-  const [open, setOpen] = useState(false)
+  const [themeDark, setThemeDark] = useState(true);
+
 
   useEffect(() => {
-    const isDark = document.documentElement.classList.contains("dark")
-    setTheme(isDark ? "dark" : "light")
-  }, [])
-
-  useEffect(() => {
-    if (theme === "dark") {
-      document.documentElement.classList.add("dark")
+    if (themeDark === true) {
+      document.documentElement.classList.add("dark");
     } else {
-      document.documentElement.classList.remove("dark")
+      document.documentElement.classList.remove("dark");
     }
-  }, [theme])
+  }, [themeDark]);
 
   return (
     <div className="text-right">
       {/* Botón del icono */}
-      <button
-        onClick={() => setOpen(!open)}
-        className="p-2 transition"
-      >
-        {theme === "dark" ? "🌙" : "☀️"}
-      </button>
+      <button onClick={() => setThemeDark(!themeDark)} className="p-2 transition">
 
-      {/* Select flotante */}
-      {open && (
-        <div className="absolute right-0 mt-2 ">
-          <select
-            value={theme}
-            onChange={(e) => {
-              setTheme(e.target.value)
-              setOpen(false)
-            }}
-            className="bg-transparent text-sm text-gray-700 dark:text-gray-200 p-2 rounded-lg outline-none w-28"
-          >
-            <option value="light">Claro</option>
-            <option value="dark">Oscuro</option>
-          </select>
-        </div>
-      )}
+        {/* Icono para cambiar el tema */}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          className="size-4.5"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+          <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
+          <path d="M12 3l0 18"></path>
+          <path d="M12 9l4.65 -4.65"></path>
+          <path d="M12 14.3l7.37 -7.37"></path>
+          <path d="M12 19.6l8.85 -8.85"></path>
+        </svg>
+      </button>
     </div>
-  )
+  );
 }
