@@ -1,4 +1,4 @@
-import { Calendar, Home, Inbox, Search, ScanFace } from "lucide-react"
+import { Home, Inbox, ScanFace } from "lucide-react"
 
 import {
   Sidebar,
@@ -23,16 +23,7 @@ const items = [
     url: "#",
     icon: Inbox,
   },
-  {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
+
   {
     title: "Reconocimiento Facial",
     url: "#",

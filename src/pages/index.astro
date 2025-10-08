@@ -1,13 +1,38 @@
 ---
-import Welcome from '@/components/Welcome.astro';
-import Layout from '@/layouts/Layout.astro';
-import Layoutt from '@/layouts/Layoutt';
+import Welcome from "@/components/Welcome.astro";
+import Layout from "@/layouts/Layout.astro";
+import Layoutt from "@/layouts/Layoutt";
+import AccordionExample from "@/landing/Accordion";
+import Login from "@/landing/login";
+import ModeToogle from "@/components/ModeToogle"
 ---
 
 <Layout>
-	<Layoutt client:load>
-		<main>
-			Content anache
-		</main>
-	</Layoutt>
+  <Layoutt client:load>
+    <ModeToogle client:load></ModeToogle>
+    <main class="flex flex-col w-4/5 mx-auto">
+      
+      <h1 class="text-center text-5xl font-semibold">
+        ¡Bienvenido a
+        <span
+          class="bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text"
+        >
+          PIGE!
+        </span>
+      </h1>
+      <p class="text-center mt-4">
+        Este proyecto esta pensado para facilitar la gestión a los Alumnos,
+        Profesores de la EPETP10
+      </p>
+
+      <section class="w-2/3 mx-auto mt-12">
+        <AccordionExample client:load />
+      </section>
+
+      <Login></Login>
+
+     
+
+    </main>
+  </Layoutt>
 </Layout>
