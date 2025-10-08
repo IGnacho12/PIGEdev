@@ -136,3 +136,18 @@ html.dark {
     @apply bg-background text-foreground;
   }
 }
+
+
+
+
+/* User Selection Colors */
+
+html::selection {
+  color: hsl(0 0% 90%);
+  background-color: hsl(0 0% 5%);
+}
+
+html.dark::selection {
+  color: hsl(0 0% 5%);
+  background-color: hsl(0 0% 90%);
+}
