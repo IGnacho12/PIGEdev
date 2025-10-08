@@ -1,8 +1,14 @@
 ---
-import Layout from "../layouts/Layout.astro"
-import LoginPage from "@/components/pages/login/loginPage"
+import Layout from "../layouts/Layout.astro";
+import LoginPage from "@/components/pages/login/loginPage";
 ---
 
 <Layout title="Iniciar Sesión">
-  <LoginPage client:load></LoginPage>
+  <LoginPage client:load />
 </Layout>
+
+<style>
+  body::-webkit-scrollbar {
+    display: none;
+  }
+</style>
