@@ -13,9 +13,9 @@ export default function ModeToggle() {
   }, [themeDark]);
 
   return (
-    <div className="text-right">
+    <div className="fixed top-2 right-2 backdrop-blur-lg rounded-full z-10">
       {/* Botón del icono */}
-      <button onClick={() => setThemeDark(!themeDark)} className="p-2 transition">
+      <button onClick={() => setThemeDark(!themeDark)} className="p-1 transition">
 
         {/* Icono para cambiar el tema */}
         <svg

@@ -46,14 +46,12 @@
 }
 
 /* Dark Mode */
-html.dark {
-  :root {
-    --bg-dark: hsl(0 0% 0%);
-    --bg: hsl(0 0% 5%);
-    --bg-light: hsl(0 0% 10%);
-    --text: hsl(0 0% 95%);
-    --text-muted: hsl(0 0% 70%);
-  }
+.dark {
+  --bg-dark: hsl(0 0% 0%);
+  --bg: hsl(0 0% 5%);
+  --bg-light: hsl(0 0% 10%);
+  --text: hsl(0 0% 95%);
+  --text-muted: hsl(0 0% 70%);
 }
 
 @theme inline {
@@ -136,9 +134,6 @@ html.dark {
     @apply bg-background text-foreground;
   }
 }
-
-
-
 
 /* User Selection Colors */
 

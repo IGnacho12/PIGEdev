@@ -1,17 +1,18 @@
 ---
-import Welcome from "@/components/Welcome.astro";
 import Layout from "@/layouts/Layout.astro";
-import Layoutt from "@/layouts/Layoutt";
-import AccordionExample from "@/landing/Accordion";
-import Login from "@/landing/login";
-import ModeToogle from "@/components/ModeToogle"
+import AccordionExample from "@/components/pages/landing/Accordion";
+import LoginOptions from "@/components/pages/landing/loginOptions";
+import ModeToogle from "@/components/ui/ModeToogle";
 ---
 
-<Layout>
-  <Layoutt client:load>
-    <ModeToogle client:load></ModeToogle>
-    <main class="flex flex-col w-4/5 mx-auto">
-      
+
+<Layout title="PIGE">
+  <ModeToogle client:load />
+  <main
+    class="flex flex-col px-5 xl:p-0 w-full xl:w-3/5 mx-auto gap-12 pb-64 relative"
+  >
+    <!-- Section Presentation -->
+    <section>
       <h1 class="text-center text-5xl font-semibold">
         ¡Bienvenido a
         <span
@@ -24,15 +25,16 @@ import ModeToogle from "@/components/ModeToogle"
         Este proyecto esta pensado para facilitar la gestión a los Alumnos,
         Profesores de la EPETP10
       </p>
+    </section>
 
-      <section class="w-2/3 mx-auto mt-12">
-        <AccordionExample client:load />
-      </section>
+    <!-- Section Accordion -->
+    <section>
+      <AccordionExample client:load />
+    </section>
 
-      <Login></Login>
-
-     
-
-    </main>
-  </Layoutt>
+    <!-- Section Login -->
+    <section>
+      <LoginOptions />
+    </section>
+  </main>
 </Layout>
