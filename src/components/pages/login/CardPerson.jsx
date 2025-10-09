@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function CardPerson({ name, dni, avatar }) {
   return (
-    <div className="flex items-center gap-2 border px-3 py-2 rounded-lg">
+    <button className="flex items-center gap-2 border px-3 py-2 rounded-lg hover:cursor-pointer hover:scale-105 transition shadow-sm">
       <Avatar className="rounded-full">
         <AvatarImage src={avatar} alt="@evilrabbit" />
         <AvatarFallback>
@@ -34,6 +34,6 @@ export default function CardPerson({ name, dni, avatar }) {
         </h1>
         <span className="text-sm text-gray-500 dark:text-gray-400">DNI: {dni}</span>
       </article>
-    </div>
+    </button>
   );
 }
