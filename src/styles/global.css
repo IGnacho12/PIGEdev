@@ -9,7 +9,6 @@
   --bg-light: hsl(0 0% 100%);
   --text: hsl(0 0% 5%);
   --text-muted: hsl(0 0% 30%);
-  --border: oklch(0.922 0 0);
   --gradient: linear-gradient(0deg, var(--bg-dark), var(--bg));
   --gradient-hover: linear-gradient(0deg, var(--bg-dark) 95%, var(--bg));
   --radius: 0.625rem;

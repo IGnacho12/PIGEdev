@@ -60,6 +60,7 @@ const [studentsArray, setStudents] = useState([])
     fetch("http://localhost:4321/api/getStudents")
       .then((response) => response.json())
       .then((data) => setStudents(data));
+      console.log(data)
   }, []);
 
   const [Filter, setFilter] = useState("");
@@ -93,13 +94,13 @@ const [studentsArray, setStudents] = useState([])
         </div>
 
         {/* Persons container */}
-        <section className="flex flex-col gap-3 mx-auto w-full sm:w-2/3 lg:w-1/3 bg-neutral-600/10 p-2 mt-14">
+        <section className="flex flex-col gap-3 mx-auto w-full sm:w-2/3 lg:w-1/3 p-2 mt-14">
           {filtered.length === 0 ? (
             <>
               <h1>No se han encontrado resultados para su busqueda</h1>
             </>
           ) : (
-            data.map((student) => (
+            filtered.map((student) => (
               <CardPerson
                 key={student.dni}
                 name={student.name}
