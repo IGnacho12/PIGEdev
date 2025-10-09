@@ -52,6 +52,16 @@ export default function LoginPage() {
       avatar: "https://randomuser.me/api/portraits/men/18.jpg",
     },
   ];
+
+  const data = []
+const [studentsArray, setStudents] = useState([]) 
+
+  useEffect(() => {
+    fetch("http://localhost:4321/api/getStudents")
+      .then((response) => response.json())
+      .then((data) => setStudents(data));
+  }, []);
+
   const [Filter, setFilter] = useState("");
 
   const filtered = students.filter(
@@ -89,7 +99,7 @@ export default function LoginPage() {
               <h1>No se han encontrado resultados para su busqueda</h1>
             </>
           ) : (
-            filtered.map((student) => (
+            data.map((student) => (
               <CardPerson
                 key={student.dni}
                 name={student.name}
