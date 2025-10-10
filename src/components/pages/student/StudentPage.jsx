@@ -1,9 +1,18 @@
 import React from "react";
 
+import Hero from "./Hero";
+import Notes from "./Notes";
+import Schedule from "./Schedule";
+
 export default function StudentPage() {
   return (
     <>
-      <main>HOla que tal</main>
+      {/* Presentación de la pagina // Division de secciones [Calificaciones, Notas, Mapa y Horario  */}
+      <main className="px-3 xl:p-0 overflow-auto scrollbar-hide">
+        <Hero></Hero>
+        <Notes></Notes>
+        <Schedule></Schedule>
+      </main>
     </>
-  )
+  );
 }

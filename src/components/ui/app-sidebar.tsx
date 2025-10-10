@@ -20,7 +20,7 @@ const items = [
   },
   {
     title: "Gestión Escolar",
-    url: "#",
+    url: "student",
     icon: Inbox,
   },
 
