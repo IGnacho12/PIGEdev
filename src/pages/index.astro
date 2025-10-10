@@ -2,6 +2,7 @@
 import Layout from "@/layouts/Layout.astro";
 import AccordionExample from "@/components/pages/landing/Accordion";
 import LoginOptions from "@/components/pages/landing/loginOptions";
+import PigeToolTip from "@/components/pages/landing/PigeToolTip";
 ---
 
 
@@ -14,11 +15,8 @@ import LoginOptions from "@/components/pages/landing/loginOptions";
     <section>
       <h1 class="text-center text-5xl font-semibold">
         ¡Bienvenido a
-        <span
-          class="bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text"
-        >
-          PIGE!
-        </span>
+        <PigeToolTip client:load></PigeToolTip>
+        
       </h1>
       <p class="text-center mt-4">
         Este proyecto esta pensado para facilitar la gestión a los Alumnos,
