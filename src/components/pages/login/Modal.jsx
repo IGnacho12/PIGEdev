@@ -21,7 +21,7 @@ export default function Modal({ open, setOpen, student }) {
         <DialogHeader>
           <DialogTitle>Iniciar sesión como estudiante</DialogTitle>
           <DialogDescription>
-            Deberás proporcionar una contraseña para acceder como este usuario ↓
+            Deberás proporcionar la contraseña establecida del siguiente perfil para poder inciar sesion. ↓
             <div className="pt-4">
               <CardPerson
                 name={student.name}
@@ -35,7 +35,7 @@ export default function Modal({ open, setOpen, student }) {
         <div className="grid gap-4">
           <div className="grid gap-3">
             <Label htmlFor="password">Contraseña</Label>
-            <Input id="password" placeholder="********" />
+            <Input id="password" placeholder="Ingresa aquí tu contraseña 👀" />
           </div>
         </div>
 
