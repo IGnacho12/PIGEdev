@@ -3,6 +3,11 @@
 
 @custom-variant dark (&:is(.dark *));
 
+
+@theme {
+  --color-bg-dark: var(--bg-dark);
+}
+
 :root {
   --bg-dark: hsl(0 0% 90%);
   --bg: hsl(0 0% 95%);
