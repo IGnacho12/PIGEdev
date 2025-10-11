@@ -54,16 +54,14 @@ export default function Attendance() {
       </h1>
 
       <main className="flex flex-col xl:flex-row justify-around gap-10">
-        <section className="flex flex-col shadow-lg px-5 py-2 rounded-2xl border border-text-muted/20 hover:border-text-muted/50 transition-colors">
+        <section className="flex flex-col px-5 py-2 rounded-2xl shadow-(--inset-shadow-sm)">
           {/* Asistencia general */}
           <header className="flex flex-col justify-between">
             <h1 className="text-lg text-center">ASISTENCIA GENERAL</h1>
           </header>
           <article>
             {/* Círculo de progreso */}
-            <ProgressCircle
-            percentage={general.porcentaje}
-            ></ProgressCircle>
+            <ProgressCircle percentage={general.porcentaje}></ProgressCircle>
 
             <div className="text-sm text-text-muted w-full">
               <p>Clases totales: {general.totales}</p>
@@ -79,12 +77,14 @@ export default function Attendance() {
         </section>
 
         {/* Tabla de materias */}
-        <section className="flex flex-col shadow-lg px-5 py-2 rounded-2xl border border-text-muted/20 hover:border-text-muted/50 transition-colors">
+        <section className="flex flex-col px-5 py-2 rounded-2xl  transition-colors shadow-(--inset-shadow-sm)">
           <Table>
             <TableHeader>
               <TableRow className="text-center">
                 <TableHead>Materia</TableHead>
-                <TableHead className="w-[100px] font-semibold text-black">Promedio</TableHead>
+                <TableHead className="w-[100px] font-semibold text-black">
+                  Promedio
+                </TableHead>
                 <TableHead>Clases totales</TableHead>
                 <TableHead>Presentes</TableHead>
                 <TableHead>Tardanzas</TableHead>
@@ -95,7 +95,9 @@ export default function Attendance() {
               {materias.map((m, i) => (
                 <TableRow className="text-center" key={i}>
                   <TableCell className="text-left">{m.nombre}</TableCell>
-                  <TableCell className="font-semibold text-black">{m.porcentaje}%</TableCell>
+                  <TableCell className="font-semibold text-black">
+                    {m.porcentaje}%
+                  </TableCell>
                   <TableCell>{m.totales}</TableCell>
                   <TableCell>{m.presentes}</TableCell>
                   <TableCell>{m.tardanzas}</TableCell>

@@ -10,7 +10,7 @@ export default function CardPerson({
   return (
     <button
       onClick={onSelect}
-      className="flex items-center gap-2 border px-3 py-2 rounded-lg hover:cursor-pointer hover:scale-105 transition-transform shadow-sm border-neutral-500/20 hover:border-neutral-800 dark:hover:border-neutral-20"
+      className="flex items-center gap-2 px-3 py-2 rounded-lg hover:cursor-pointer hover:scale-105 border-2 border-text-muted/20 hover:border-bg-light transition-all shadow-sm "
     >
       <Avatar className="rounded-full size-12">
         <AvatarImage src={avatar} alt={name} />

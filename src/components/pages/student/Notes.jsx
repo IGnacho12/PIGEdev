@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/Table";
 
-export default function Notes({name = "ignacio"}) {
+export default function Notes({ name = "ignacio" }) {
   const [notas, setNotas] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -42,16 +42,15 @@ export default function Notes({name = "ignacio"}) {
   const materias = Object.entries(materiasMap).map(([nombre, notas]) => ({
     nombre,
     notas,
-    promedio:
-      notas.reduce((acc, n) => acc + Number(n), 0) / notas.length,
+    promedio: notas.reduce((acc, n) => acc + Number(n), 0) / notas.length,
   }));
 
   // Determinar máximo de notas por materia para la cabecera
   const maxNotas = Math.max(...materias.map((m) => m.notas.length));
 
   return (
-    <article className="px-5 w-full xl:w-3/5 mx-auto">
-      <Table className="border border-text-muted/20 hover:border-text-muted/50 transition-colors c">
+    <article className="w-full xl:w-3/5 mx-auto shadow-(--inset-shadow-md) rounded-sm">
+      <Table >
         <TableHeader>
           <TableRow>
             <TableHead>Materia</TableHead>
