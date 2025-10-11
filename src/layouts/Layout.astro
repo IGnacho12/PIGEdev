@@ -3,8 +3,8 @@ import "../styles/global.css";
 
 const { title } = Astro.props; // Access the title prop
 
-import SIDEBAR from "@/layouts/SIDEBAR";
-import ModeToggle from "@/components/ui/ModeTooggle";
+import SidebarLayout from "@/layouts/SidebarLayout";
+import ModeToggle from "@/components/ui/ModeToggle";
 ---
 
 <script is:inline>
@@ -40,10 +40,10 @@ import ModeToggle from "@/components/ui/ModeTooggle";
     <title>{title}</title>
   </head>
   <body>
-    <SIDEBAR client:load>
+    <SidebarLayout client:load>
       <ModeToggle client:load />
       <slot />
-    </SIDEBAR>
+    </SidebarLayout>
   </body>
 </html>
 
@@ -56,10 +56,10 @@ import ModeToggle from "@/components/ui/ModeTooggle";
   }
 
   @font-face {
-  font-family: 'Geist';
-  src: url('/fonts/Geist.ttf') format('truetype');
-}
-body {
-  font-family: "Geist";
-}
+    font-family: "Geist";
+    src: url("/fonts/Geist.ttf") format("truetype");
+  }
+  body {
+    font-family: "Geist";
+  }
 </style>

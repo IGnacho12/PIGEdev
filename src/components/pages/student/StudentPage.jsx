@@ -3,6 +3,7 @@ import React from "react";
 import Hero from "./Hero";
 import Notes from "./Notes";
 import Schedule from "./Schedule";
+import Attendance from "./Attendance";
 
 export default function StudentPage() {
   return (
@@ -11,6 +12,7 @@ export default function StudentPage() {
       <main className="px-3 xl:p-0 overflow-auto scrollbar-hide">
         <Hero></Hero>
         <Notes></Notes>
+        <Attendance></Attendance>
         <Schedule></Schedule>
       </main>
     </>
