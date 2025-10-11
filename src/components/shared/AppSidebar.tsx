@@ -33,8 +33,8 @@ const items = [
 
 export function AppSidebar() {
   return (
-    <Sidebar>
-      <SidebarContent>
+    <Sidebar className="border-r border-text-muted/20">
+      <SidebarContent >
         <SidebarGroup>
           <SidebarGroupLabel>Plataforma integral de Gestión Escolar</SidebarGroupLabel>
           <SidebarGroupContent>
