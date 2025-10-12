@@ -12,7 +12,7 @@ import ProgressCircle from "./ProgressCircle";
 
 export default function Attendance() {
   const general = {
-    porcentaje: 82,
+    porcentaje: 50,
     materia: "",
     totales: 50,
     presentes: 41,
@@ -49,10 +49,6 @@ export default function Attendance() {
 
   return (
     <div className="w-full xl:w-4/5 mx-auto mt-10 flex flex-col gap-8 mb-40">
-      <h1 className="text-center text-3xl font-bold tracking-wide">
-        Asistencia
-      </h1>
-
       <main className="flex flex-col xl:flex-row justify-around gap-10 ">
         <section className="flex flex-col px-5 py-2 rounded-2xl shadow-(--inset-shadow-sm) bg-(--bg-light) dark:bg-(--bg-dark)">
           {/* Asistencia general */}
