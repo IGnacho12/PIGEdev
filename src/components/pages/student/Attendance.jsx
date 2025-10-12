@@ -53,8 +53,8 @@ export default function Attendance() {
         Asistencia
       </h1>
 
-      <main className="flex flex-col xl:flex-row justify-around gap-10">
-        <section className="flex flex-col px-5 py-2 rounded-2xl shadow-(--inset-shadow-sm)">
+      <main className="flex flex-col xl:flex-row justify-around gap-10 ">
+        <section className="flex flex-col px-5 py-2 rounded-2xl shadow-(--inset-shadow-sm) bg-(--bg-light) dark:bg-(--bg-dark)">
           {/* Asistencia general */}
           <header className="flex flex-col justify-between">
             <h1 className="text-lg text-center">ASISTENCIA GENERAL</h1>
@@ -77,12 +77,12 @@ export default function Attendance() {
         </section>
 
         {/* Tabla de materias */}
-        <section className="flex flex-col px-5 py-2 rounded-2xl  transition-colors shadow-(--inset-shadow-sm)">
+        <section className="flex flex-col px-5 py-2 rounded-2xl  transition-colors shadow-(--inset-shadow-sm) bg-(--bg-light) dark:bg-(--bg-dark)">
           <Table>
             <TableHeader>
               <TableRow className="text-center">
                 <TableHead>Materia</TableHead>
-                <TableHead className="w-[100px] font-semibold text-black">
+                <TableHead className="w-[100px] font-semibold text-text">
                   Promedio
                 </TableHead>
                 <TableHead>Clases totales</TableHead>
@@ -95,7 +95,7 @@ export default function Attendance() {
               {materias.map((m, i) => (
                 <TableRow className="text-center" key={i}>
                   <TableCell className="text-left">{m.nombre}</TableCell>
-                  <TableCell className="font-semibold text-black">
+                  <TableCell className="font-semibold text-text">
                     {m.porcentaje}%
                   </TableCell>
                   <TableCell>{m.totales}</TableCell>

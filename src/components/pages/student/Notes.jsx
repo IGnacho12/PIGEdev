@@ -49,7 +49,7 @@ export default function Notes({ name = "ignacio" }) {
   const maxNotas = Math.max(...materias.map((m) => m.notas.length));
 
   return (
-    <article className="w-full xl:w-3/5 mx-auto shadow-(--inset-shadow-md) rounded-sm">
+    <article className="w-full xl:w-3/5 mx-auto shadow-(--inset-shadow-md) rounded-sm bg-(--bg-light)">
       <Table >
         <TableHeader>
           <TableRow>

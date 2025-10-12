@@ -1,21 +1,25 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-
 @custom-variant dark (&:is(.dark *));
 
 @theme {
   --color-bg-dark: var(--bg-dark);
   --color-text-muted: var(--text-muted);
-
+  --color-bg-dark: var(--color-bg-dark);
+  --color-bg: var(--color-bg);
+  --color-bg-light: var(--color-bg-light);
 }
 
 :root {
-  --inset-shadow-sm: inset 0 1px 2px #ffffff30, 0 1px 2px #00000030, 0 2px 4px #00000015;
-  --inset-shadow-md: inset 0 2px 3px #ffffff30, 0 2px 3px #00000030, 0 3px 5px #00000015;
-  --shadow-sm: rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px;
+  --inset-shadow-sm: inset 0 1px 2px #ffffff30, 0 1px 2px #00000030,
+    0 2px 4px #00000015;
+  --inset-shadow-md: inset 0 2px 3px #ffffff30, 0 2px 3px #00000030,
+    0 3px 5px #00000015;
+  --shadow-sm: rgba(17, 17, 26, 0.05) 0px 1px 0px,
+    rgba(17, 17, 26, 0.1) 0px 0px 8px;
   --bg-dark: hsl(0 0% 90%);
-  --bg: hsl(0 0% 95%);
+  --bg: hsl(0 0% 95%);  
   --bg-light: hsl(0 0% 100%);
   --text: hsl(0 0% 5%);
   --text-muted: hsl(0 0% 30%);
@@ -155,5 +159,3 @@ html.dark::selection {
   color: hsl(0 0% 5%);
   background-color: hsl(0 0% 90%);
 }
-
-
