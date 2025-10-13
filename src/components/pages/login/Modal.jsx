@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import {
   Dialog,
@@ -13,7 +14,21 @@ import { Label } from "@/components/ui/Label";
 import CardPerson from "./CardPerson";
 
 export default function Modal({ open, setOpen, student }) {
-  if (!student) return null; // no mostrar nada si no hay estudiante seleccionado
+  const [password, setPassword] = useState("");
+
+  function checkPassword() {
+    const STUDENT_PASSWORD = student.password_value;
+    if (password === STUDENT_PASSWORD) {
+      console.log("✅ Iniciar sesión");
+      window.location.href = `/student?name=${student.name}`;
+
+      // aquí podrías ejecutar la lógica de login
+    } else {
+      console.log("❌ Contraseña incorrecta");
+    }
+  }
+
+  if (!student) return null;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -21,7 +36,8 @@ export default function Modal({ open, setOpen, student }) {
         <DialogHeader>
           <DialogTitle>Iniciar sesión como estudiante</DialogTitle>
           <DialogDescription>
-            Deberás proporcionar la contraseña establecida del siguiente perfil para poder inciar sesion. ↓
+            Deberás proporcionar la contraseña establecida del siguiente perfil
+            para poder iniciar sesión. ↓
             <div className="pt-4">
               <CardPerson
                 name={student.name}
@@ -35,17 +51,23 @@ export default function Modal({ open, setOpen, student }) {
         <div className="grid gap-4">
           <div className="grid gap-3">
             <Label htmlFor="password">Contraseña</Label>
-            <Input id="password" placeholder="Ingresa aquí tu contraseña 👀" />
+            <Input
+              id="password"
+              type="password"
+              placeholder="Ingresa aquí tu contraseña 👀"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </div>
         </div>
 
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline" onClick={() => setOpen(false)}>
-              Cancelar
-            </Button>
+            <Button variant="outline">Cancelar</Button>
           </DialogClose>
-          <Button type="submit">Iniciar sesión</Button>
+          <Button type="button" onClick={checkPassword}>
+            Iniciar sesión
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -7,8 +7,6 @@ export default function LogIn() {
   const handleLogin = (e) => {
     e.preventDefault();
     // Aquí podrías agregar la lógica de autenticación
-    console.log("Email:", email);
-    console.log("Password:", password);
   };
 
   return (
