@@ -14,6 +14,7 @@ export default function LoginPage() {
 
   // Recuperar datos
   useEffect(() => {
+    console.log("get students")
     fetch("/api/getStudents")
       .then((response) => response.json())
       .then((data) => setStudents(data));
