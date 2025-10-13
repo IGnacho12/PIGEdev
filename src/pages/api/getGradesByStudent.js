@@ -1,4 +1,3 @@
-import { neon } from "@neondatabase/serverless";
 export const prerender = false;
 
 const DATABASE_URL =
