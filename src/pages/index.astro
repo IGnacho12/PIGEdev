@@ -10,12 +10,15 @@ import PigeToolTip from "@/components/pages/landing/PigeToolTip.jsx";
   <div
     class="fixed inset-0 -z-10 overflow-hidden
            bg-(--bg-light) dark:bg-(--bg-bg)
-           bg-[radial-gradient(ellipse_80%_80%_at_50%_-40%,rgba(0,114,255,0.25),rgba(255,255,255,0))] 
+           bg-[radial-gradient(ellipse_80%_80%_at_50%_-40%,rgba(0,114,255,0.25),rgba(255,255,255,0))]
            dark:bg-[radial-gradient(ellipse_80%_80%_at_50%_-35%,rgba(120,119,198,0.3),rgba(0,0,0,0))]"
-  ></div>
+  >
+  </div>
 
   <!-- Contenido principal -->
-  <main class="flex flex-col px-5 xl:p-0 w-full xl:w-3/5 mx-auto gap-12 pb-64 relative z-10">
+  <main
+    class="flex flex-col px-5 xl:p-0 w-full xl:w-3/5 mx-auto gap-12 pb-64 relative z-10"
+  >
     <!-- Section Presentation -->
     <section>
       <h1 class="text-center text-5xl font-semibold">
@@ -23,7 +26,8 @@ import PigeToolTip from "@/components/pages/landing/PigeToolTip.jsx";
         <PigeToolTip client:load />
       </h1>
       <p class="text-center mt-4">
-        Este proyecto está pensado para facilitar la gestión a los alumnos y profesores de la EPETP10.
+        Este proyecto está pensado para facilitar la gestión a los alumnos y
+        profesores de la EPETP10.
       </p>
     </section>
 
