@@ -1,7 +1,6 @@
 import { defineConfig } from "astro/config";
 import vercel from "@astrojs/vercel";
 import react from "@astrojs/react";
-@astrojs/vercel"
 import path from "path";
 
 export default defineConfig({
