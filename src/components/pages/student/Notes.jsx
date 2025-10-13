@@ -1,41 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
-  TableCaption,
-  TableCell,
   TableFooter,
   TableHead,
   TableHeader,
   TableRow,
+  TableCell,
 } from "@/components/ui/Table";
 
-export default function Notes({ name = "ignacio" }) {
-  const [notas, setNotas] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch(`/api/getGradesByStudent?name=${name}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setNotas(data); // data es un array de objetos de la base
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setLoading(false);
-      });
-  }, []);
-
-  if (loading) return <p>Cargando notas...</p>;
+export default function Notes({ notas = [], loading }) {
+  if (loading) return <SkeletonLoader />;
   if (!notas.length) return <p>No se encontraron notas para este alumno.</p>;
 
   // Agrupar notas por materia
   const materiasMap = {};
   notas.forEach((nota) => {
-    if (!materiasMap[nota.materia]) {
-      materiasMap[nota.materia] = [];
-    }
+    if (!materiasMap[nota.materia]) materiasMap[nota.materia] = [];
     materiasMap[nota.materia].push(nota.nota);
   });
 
@@ -45,7 +27,6 @@ export default function Notes({ name = "ignacio" }) {
     promedio: notas.reduce((acc, n) => acc + Number(n), 0) / notas.length,
   }));
 
-  // Determinar máximo de notas por materia para la cabecera
   const maxNotas = Math.max(...materias.map((m) => m.notas.length));
 
   return (
@@ -87,6 +68,49 @@ export default function Notes({ name = "ignacio" }) {
             <TableCell colSpan={maxNotas + 1}>{materias.length}</TableCell>
           </TableRow>
         </TableFooter>
+      </Table>
+    </article>
+  );
+}
+
+function SkeletonLoader() {
+  return (
+    <article className="w-full xl:w-3/5 mx-auto shadow-(--inset-shadow-sm) rounded-sm bg-(--bg-light) dark:bg-(--bg-dark)">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>
+              <Skeleton className="h-4 w-[150px] rounded" />
+            </TableHead>
+            <TableHead>
+              <Skeleton className="h-4 w-[120px] rounded" />
+            </TableHead>
+            <TableHead>
+              <Skeleton className="h-4 w-[80px] rounded" />
+            </TableHead>
+            <TableHead>
+              <Skeleton className="h-4 w-[80px] rounded" />
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {new Array(5).fill(null).map((_, idx) => (
+            <TableRow key={idx}>
+              <TableCell>
+                <Skeleton className="h-4 w-[100px] rounded" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-4 w-[80px] rounded" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-4 w-[60px] rounded" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-4 w-[60px] rounded" />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
       </Table>
     </article>
   );
