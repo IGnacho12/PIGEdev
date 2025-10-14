@@ -14,7 +14,7 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from "@/components/ui/empty";
+} from "@/components/ui/Empty";
 
 export default function StudentPage() {
   const [studentName, setStudentName] = useState("");
