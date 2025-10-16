@@ -14,6 +14,11 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/ToolTip";
 
 export default function StudentPage() {
   const [studentName, setStudentName] = useState("");
@@ -32,7 +37,7 @@ export default function StudentPage() {
           <Attendance name={studentName}></Attendance>
           <Schedule></Schedule>
         </main>
-      ) : ( 
+      ) : (
         <Empty className="from-muted/50 to-background h-full ">
           <EmptyHeader>
             <EmptyMedia variant="icon">👤</EmptyMedia>

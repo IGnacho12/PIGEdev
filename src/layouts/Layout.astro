@@ -1,4 +1,5 @@
 ---
+import SpeedInsights from "@vercel/speed-insights/astro";
 import "../styles/global.css";
 
 const { title } = Astro.props; // Access the title prop
@@ -40,6 +41,7 @@ import ModeToggle from "@/components/ui/ModeToggle";
     <title>{title}</title>
   </head>
   <body>
+    <SpeedInsights></SpeedInsights>
     <SidebarLayout client:load>
       <ModeToggle client:load />
       <slot />

@@ -1,15 +1,16 @@
-import { Home, Inbox, ScanFace } from "lucide-react"
+import { Home, Inbox, ScanFace } from "lucide-react";
 
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/Sidebar"
+} from "@/components/ui/Sidebar";
 
 // Menu items.
 const items = [
@@ -24,21 +25,19 @@ const items = [
     icon: Inbox,
   },
 
-  {
-    title: "Reconocimiento Facial",
-    url: "#",
-    icon: ScanFace,
-  },
-]
+];
 
 export function AppSidebar() {
   return (
     <Sidebar className="border-r border-text-muted/20">
-      <SidebarContent >
+      <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Plataforma integral de Gestión Escolar</SidebarGroupLabel>
+          <SidebarGroupLabel>
+            Plataforma integral de Gestión Escolar
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
+              
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
@@ -53,6 +52,14 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter className="inline-flex">
+        <SidebarMenuButton asChild>
+          <a href="Reconocimineto Facial anache">
+            <ScanFace></ScanFace>
+            <span>Reconocimiento Facial</span>
+          </a>
+        </SidebarMenuButton>
+      </SidebarFooter>
     </Sidebar>
-  )
+  );
 }

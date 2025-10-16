@@ -10,7 +10,7 @@ export default function PigeToolTip() {
     <>
       <Tooltip>
         <TooltipTrigger>
-          <span class="bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">
+          <span className="bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">
             PIGE!
           </span>
         </TooltipTrigger>
