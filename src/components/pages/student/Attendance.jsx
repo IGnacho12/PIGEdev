@@ -1,5 +1,4 @@
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import {
   Table,
   TableBody,
@@ -9,57 +8,54 @@ import {
   TableRow,
 } from "@/components/ui/Table";
 import ProgressCircle from "./ProgressCircle";
+import useFetch from "@/hooks/useFetch";
 
-export default function Attendance() {
-  const general = {
-    porcentaje: 50,
-    materia: "",
-    totales: 50,
-    presentes: 41,
-    tardanzas: 3,
-    ausentes: 6,
-  };
+export default function Attendance({ name }) {
+  const { data, loading, error } = useFetch(
+    `/api/getAttendanceByStudent?name=${name}`
+  );
 
-  const materias = [
-    {
-      nombre: "Matemática",
-      porcentaje: 85,
-      totales: 50,
-      presentes: 42,
-      tardanzas: 3,
-      ausentes: 5,
+  if (loading)
+    return <p className="text-center mt-10 text-sm text-gray-500">Cargando...</p>;
+  if (error)
+    return (
+      <p className="text-center mt-10 text-red-500">
+        Error al cargar la asistencia
+      </p>
+    );
+  if (!data) return null;
+
+  const { resumen, attendance } = data;
+
+  // 🧮 Calcular resumen general
+  const general = resumen.reduce(
+    (acc, m) => {
+      acc.totales += m.totales;
+      acc.presentes += m.presentes;
+      acc.tardanzas += m.tardanzas;
+      acc.ausentes += m.ausentes;
+      return acc;
     },
-    {
-      nombre: "Lengua",
-      porcentaje: 82,
-      totales: 50,
-      presentes: 41,
-      tardanzas: 3,
-      ausentes: 6,
-    },
-    {
-      nombre: "Historia",
-      porcentaje: 79,
-      totales: 50,
-      presentes: 39,
-      tardanzas: 4,
-      ausentes: 7,
-    },
-  ];
+    { totales: 0, presentes: 0, tardanzas: 0, ausentes: 0 }
+  );
+
+  general.porcentaje = Math.round(
+    ((general.presentes + general.tardanzas * 0.5) / general.totales) * 100
+  );
 
   return (
     <div className="w-full xl:w-4/5 mx-auto mt-10 flex flex-col gap-8 mb-40">
-      <main className="flex flex-col xl:flex-row justify-around gap-10 ">
+      <main className="flex flex-col xl:flex-row justify-around gap-10">
+        {/* ===== Asistencia general ===== */}
         <section className="flex flex-col px-5 py-2 rounded-2xl shadow-(--inset-shadow-sm) bg-(--bg-light) dark:bg-(--bg-dark)">
-          {/* Asistencia general */}
           <header className="flex flex-col justify-between">
             <h1 className="text-lg text-center">ASISTENCIA GENERAL</h1>
           </header>
-          <article>
-            {/* Círculo de progreso */}
-            <ProgressCircle percentage={general.porcentaje}></ProgressCircle>
 
-            <div className="text-sm text-text-muted w-full">
+          <article>
+            <ProgressCircle percentage={general.porcentaje} />
+
+            <div className="text-sm text-text-muted w-full mt-2">
               <p>Clases totales: {general.totales}</p>
               <p>Presentes: {general.presentes}</p>
               <p>Tardanzas: {general.tardanzas}</p>
@@ -67,30 +63,29 @@ export default function Attendance() {
             </div>
 
             <p className="text-xs text-gray-500 mt-2 text-center">
-              Para poder aprobar necesitas una asistencia mayor al 80%
+              Para aprobar necesitás una asistencia mayor al 80%
             </p>
           </article>
         </section>
 
-        {/* Tabla de materias */}
-        <section className="flex flex-col px-5 py-2 rounded-2xl  transition-colors shadow-(--inset-shadow-sm) bg-(--bg-light) dark:bg-(--bg-dark)">
+        {/* ===== Tabla por materia ===== */}
+        <section className="flex flex-col px-5 py-2 rounded-2xl shadow-(--inset-shadow-sm) bg-(--bg-light) dark:bg-(--bg-dark)">
           <Table>
             <TableHeader>
               <TableRow className="text-center">
                 <TableHead>Materia</TableHead>
-                <TableHead className="w-[100px] font-semibold text-text">
-                  Promedio
-                </TableHead>
+                <TableHead className="font-semibold text-text">Promedio</TableHead>
                 <TableHead>Clases totales</TableHead>
                 <TableHead>Presentes</TableHead>
                 <TableHead>Tardanzas</TableHead>
                 <TableHead>Ausentes</TableHead>
               </TableRow>
             </TableHeader>
+
             <TableBody>
-              {materias.map((m, i) => (
+              {resumen.map((m, i) => (
                 <TableRow className="text-center" key={i}>
-                  <TableCell className="text-left">{m.nombre}</TableCell>
+                  <TableCell className="text-left">{m.subject}</TableCell>
                   <TableCell className="font-semibold text-text">
                     {m.porcentaje}%
                   </TableCell>

@@ -25,17 +25,17 @@ export async function GET(request) {
     // Traer todas las notas del alumno por nombre
     const notas = await consulta`
       SELECT 
-        g.id_nota,
-        g.id_alumno,
-        s.nombre AS materia,
-        g.tipo_nota,
-        g.periodo,
-        g.nota
+        g.id_grade,
+        g.id_student,
+        s.name AS subject,
+        g.type_grade,
+        g.period,
+        g.grade
       FROM grades g
-      JOIN subjects s ON g.id_materia = s.id_materia
-      JOIN students st ON g.id_alumno = st.id
+      JOIN subjects s ON g.id_subject = s.id_subject
+      JOIN students st ON g.id_student = st.id
       WHERE st.name ILIKE ${`%${name}%`}
-      ORDER BY g.id_materia, g.periodo;
+      ORDER BY g.id_subject, g.period;
     `;
 
     return new Response(JSON.stringify(notas), {

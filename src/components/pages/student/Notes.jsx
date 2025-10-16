@@ -1,5 +1,6 @@
 import React from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import useFetch from "@/hooks/useFetch";
 import {
   Table,
   TableBody,
@@ -10,33 +11,42 @@ import {
   TableCell,
 } from "@/components/ui/Table";
 
-export default function Notes({ notas = [], loading }) {
-  if (loading) return <SkeletonLoader />;
-  if (!notas.length) return <p>No se encontraron notas para este alumno.</p>;
+export default function Notes({ name }) {
+  const { data: grades = [], loading, error } = useFetch(
+    `/api/getGradesByStudent?name=${name}`
+  );
 
-  // Agrupar notas por materia
-  const materiasMap = {};
-  notas.forEach((nota) => {
-    if (!materiasMap[nota.materia]) materiasMap[nota.materia] = [];
-    materiasMap[nota.materia].push(nota.nota);
+  if (loading) return <SkeletonLoader />;
+  if (!grades.length) return <p>No se encontraron grades para este alumno.</p>;
+
+  // ---- Agrupar notas por materia ----
+  const subjectsMap = {};
+  grades.forEach((grade) => {
+    const subjectName = grade.subject;
+    const gradeValue = Number(grade.grade);
+    if (!subjectsMap[subjectName]) subjectsMap[subjectName] = [];
+    subjectsMap[subjectName].push(gradeValue);
   });
 
-  const materias = Object.entries(materiasMap).map(([nombre, notas]) => ({
-    nombre,
-    notas,
-    promedio: notas.reduce((acc, n) => acc + Number(n), 0) / notas.length,
-  }));
+  const subjects = Object.entries(subjectsMap).map(([name, grades]) => {
+    const total = grades.reduce((sum, n) => sum + n, 0);
+    const average = total / grades.length;
+    return { name, grades, average };
+  });
 
-  const maxNotas = Math.max(...materias.map((m) => m.notas.length));
+  const maxGradesCount =
+    subjects.length > 0
+      ? Math.max(...subjects.map((subject) => subject.grades.length))
+      : 0;
 
   return (
-    <article className="w-full xl:w-3/5 mx-auto shadow-(--inset-shadow-sm) rounded-sm bg-(--bg-light) dark:bg-(--bg-dark)">
+    <article className="w-full xl:w-3/5 mx-auto shadow-sm rounded-sm bg-(--bg-light) dark:bg-(--bg-dark)">
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead>Materia</TableHead>
             <TableHead>Promedio Actual</TableHead>
-            {Array.from({ length: maxNotas }).map((_, i) => (
+            {Array.from({ length: maxGradesCount }).map((_, i) => (
               <TableHead className="text-center" key={i}>
                 Nota {i + 1}
               </TableHead>
@@ -45,27 +55,23 @@ export default function Notes({ notas = [], loading }) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {materias.map((materia, idx) => (
+          {subjects.map((subject, idx) => (
             <TableRow key={idx}>
-              <TableCell>{materia.nombre}</TableCell>
-              <TableCell className="font-bold">
-                {materia.promedio.toFixed(1)}
-              </TableCell>
-              {materia.notas.map((n, i) => (
+              <TableCell>{subject.name}</TableCell>
+              <TableCell className="font-bold">{subject.average.toFixed(1)}</TableCell>
+              {subject.grades.map((n, i) => (
                 <TableCell className="text-center" key={i}>
                   {n}
                 </TableCell>
               ))}
-              <TableCell className="text-center">
-                {materia.promedio.toFixed(0)}
-              </TableCell>
+              <TableCell className="text-center">{subject.average.toFixed(0)}</TableCell>
             </TableRow>
           ))}
         </TableBody>
         <TableFooter>
           <TableRow>
             <TableCell colSpan={2}>Total Materias</TableCell>
-            <TableCell colSpan={maxNotas + 1}>{materias.length}</TableCell>
+            <TableCell colSpan={maxGradesCount + 1}>{subjects.length}</TableCell>
           </TableRow>
         </TableFooter>
       </Table>
@@ -73,9 +79,10 @@ export default function Notes({ notas = [], loading }) {
   );
 }
 
+// ---- Skeleton Loader ----
 function SkeletonLoader() {
   return (
-    <article className="w-full xl:w-3/5 mx-auto shadow-(--inset-shadow-sm) rounded-sm bg-(--bg-light) dark:bg-(--bg-dark)">
+    <article className="w-full xl:w-3/5 mx-auto shadow-sm rounded-sm bg-(--bg-light) dark:bg-(--bg-dark)">
       <Table>
         <TableHeader>
           <TableRow>
