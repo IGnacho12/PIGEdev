@@ -62,4 +62,21 @@ import ModeToggle from "@/components/ui/ModeToggle";
   body {
     font-family: "Geist";
   }
+
+  html {
+    overflow-y: scroll;
+  }
+
+  html::-webkit-scrollbar {
+    width: 7px;
+  }
+
+  html::-webkit-scrollbar-thumb {
+    background: hsl(0 0% 90%);
+    border-radius: 8px;
+    transition: background 0.3s ease;
+  }
+  html.dark::-webkit-scrollbar-thumb {
+    background: hsl(0, 0%, 25%);
+  }
 </style>
