@@ -1,14 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useEffectEvent, useState } from "react";
 import CardPerson from "./CardPerson";
 import { Users } from "lucide-react";
 import Modal from "@/components/pages/login/Modal";
-import { Input } from "@/components/ui/Input";
-import { Label } from "@radix-ui/react-label";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 
 export default function LoginPage() {
   // Estado del modal y del estudiante seleccionado
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
+  const [totalCount, setTotalCounts] = useState("0");
 
   // Filtro
   const [filter, setFilter] = useState("");
@@ -19,7 +23,10 @@ export default function LoginPage() {
     console.log("get students");
     fetch("/api/getStudents")
       .then((response) => response.json())
-      .then((data) => setStudents(data));
+      .then((data) => {
+        setStudents(data);
+        setTotalCounts(data.length);
+      });
   }, []);
 
   const filtered = students.filter((s) => {
@@ -28,6 +35,11 @@ export default function LoginPage() {
     const query = filter.toLowerCase();
     return name.includes(query) || dni.includes(query);
   });
+
+  // Cambiar el totalCount cuando cambia el filtered
+  useEffect(() => {
+    setTotalCounts(filtered.length);
+  }, [filtered]);
 
   return (
     <>
@@ -38,30 +50,23 @@ export default function LoginPage() {
       />
 
       <main className="px-3 xl:p-0 ">
-        <h1 className="font-semibold text-center text-4xl">Iniciar sesión</h1>
+        <h1 className="font-semibold text-4xl w-fit mx-auto">Iniciar sesión</h1>
         <p className="text-md text-center text-pretty">
           Debes buscar en la base de datos ya sea con tu nombre, apellido o DNI,
           y usar tu contraseña asignada.
         </p>
         {/* Input para buscar personas */}
-        <div className="items-center gap-2  w-fit rounded-md  transition-colors mx-auto mt-12">
-          <Label htmlFor="email">Email</Label>
-          <Input type="email" id="email" placeholder="Email" />
-        </div>
-
-        <div className="flex flex-row items-center gap-2 border border-[var(--border)] w-fit rounded-md group hover:border-blue-500 transition-colors mx-auto mt-12">
-          <div className="px-2 border-r border-[var(--border)] text-[var(--text-muted)]">
-            <Users />
-          </div>
-
-          <input
+        <InputGroup className="w-fit mx-auto mt-12 bg-[var(--bg-light)] dark:bg-[var(--bg-light)]">
+          <InputGroupInput
+            placeholder="Mario Antonio Rodriguez"
             onChange={(e) => setFilter(e.target.value)}
-            className="px-2 py-1 outline-none bg-transparent text-[var(--text)] placeholder-[var(--text-muted)]"
-            placeholder="Buscar persona"
           />
-        </div>
+          <InputGroupAddon>Alumno</InputGroupAddon>
+          <InputGroupAddon align="inline-end">{totalCount}</InputGroupAddon>
+        </InputGroup>
+
         {/* Lista de estudiantes */}
-        <section className="flex flex-col gap-3 mx-auto w-full sm:w-2/3 lg:w-1/3 p-2 mt-14">
+        <section className="flex flex-col gap-3 mx-auto w-full sm:w-2/3 lg:w-1/3 p-2 mt-6">
           {filtered.length === 0 ? (
             <h1>No se han encontrado resultados para su búsqueda</h1>
           ) : (
