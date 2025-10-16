@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
   TableCell,
-} from "@/components/ui/Table";
+} from "@/components/ui/table";
 
 export default function Notes({ name }) {
   const { data: grades = [], loading, error } = useFetch(

@@ -13,7 +13,7 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from "@/components/ui/Empty";
+} from "@/components/ui/empty";
 
 export default function StudentPage() {
   const [studentName, setStudentName] = useState("");

@@ -1,4 +1,4 @@
-import React, { useEffect, useEffectEvent, useState } from "react";
+import React, { useEffect, useState } from "react";
 import CardPerson from "./CardPerson";
 import { Users } from "lucide-react";
 import Modal from "@/components/pages/login/Modal";
