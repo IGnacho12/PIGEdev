@@ -13,22 +13,23 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import CardPerson from "./CardPerson";
 
-export default function Modal({ open, setOpen, student }) {
+export default function Modal({ open, setOpen, person, type = "student" }) {
   const [password, setPassword] = useState("");
 
-  function checkPassword() {
-    const STUDENT_PASSWORD = student.password_value;
-    if (password === STUDENT_PASSWORD) {
-      console.log("✅ Iniciar sesión");
-      window.location.href = `/student?name=${student.name}`;
+  // valores posibles para type 1. "student" 2. "teacher"
 
-      // aquí podrías ejecutar la lógica de login
+  function checkPassword() {
+    const CORRECT_PASSWORD = person.password_value;
+
+    if (password === CORRECT_PASSWORD) {
+      console.log("✅ Iniciar sesión");
+      window.location.href = `/${type}?name=${encodeURIComponent(person.name)}`;
     } else {
       console.log("❌ Contraseña incorrecta");
     }
   }
 
-  if (!student) return null;
+  if (!person) return null;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -38,17 +39,17 @@ export default function Modal({ open, setOpen, student }) {
           <DialogDescription>
             Deberás proporcionar la contraseña establecida del siguiente perfil
             para poder iniciar sesión. ↓
-            <div className="pt-4">
-              <CardPerson
-                name={student.name}
-                dni={student.dni}
-                avatar={student.avatar}
-              />
-            </div>
           </DialogDescription>
         </DialogHeader>
 
-        <div className="grid gap-4">
+        <CardPerson
+          className="mt-4"
+          name={person.name}
+          dni={person.dni}
+          avatar={person.avatar}
+        />
+
+        <div className="grid gap-4 mt-4">
           <div className="grid gap-3">
             <Label htmlFor="password">Contraseña</Label>
             <Input

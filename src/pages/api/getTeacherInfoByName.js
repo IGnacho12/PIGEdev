@@ -1,10 +1,11 @@
 export const prerender = false;
+
 import { neon } from "@neondatabase/serverless";
 import "dotenv/config";
 
 const consulta = neon(process.env.DATABASE_URL);
 
-// GET /api/getGradesByStudent?name=Ignacio
+// GET /api/getAttendanceByStudent
 export async function GET(request) {
   try {
     const url = new URL(request.url);
@@ -20,26 +21,25 @@ export async function GET(request) {
       );
     }
 
-    // Traer todas las notas del alumno por nombre
-    const notas = await consulta`
-      SELECT 
-        g.id_grade,
-        g.id_student,
-        s.name AS subject,
-        g.type_grade,
-        g.period,
-        g.grade
-      FROM grades g
-      JOIN subjects s ON g.id_subject = s.id_subject
-      JOIN students st ON g.id_student = st.id
-      WHERE st.name ILIKE ${`%${name}%`}
-      ORDER BY g.id_subject, g.period;
-    `;
+    // Obtener información del profesor, que materias cursa, en que cursos da clases y sus datos.
+    const response = await consulta`
+SELECT 
+  t.name AS name,
+  array_agg(s.name) AS subjects
+FROM 
+  teacher_subjects ts
+JOIN 
+  teachers t ON t.id_teacher = ts.teacher_id
+JOIN 
+  subjects s ON s.id_subject = ts.subject_id
+WHERE t.name = ${`%${name}%`}
+GROUP BY t.name;
 
-    return new Response(JSON.stringify(notas), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    `;
+    // teacher.name -> Nombre del profe
+    // teacher.subjects -> Materias que da el profesor
+
+    return new Response(JSON.stringify(response));
   } catch (err) {
     return new Response(JSON.stringify({ error: err.message }), {
       status: 500,

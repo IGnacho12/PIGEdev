@@ -10,7 +10,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/Sidebar";
+} from "@/components/ui/sidebar";
 
 // Menu items.
 const items = [
@@ -21,10 +21,9 @@ const items = [
   },
   {
     title: "Gestión Escolar",
-    url: "student",
+    url: "estudiante",
     icon: Inbox,
   },
-
 ];
 
 export function AppSidebar() {
@@ -37,7 +36,6 @@ export function AppSidebar() {
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>

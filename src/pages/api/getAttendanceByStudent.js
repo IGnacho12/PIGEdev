@@ -1,10 +1,9 @@
 export const prerender = false;
 
 import { neon } from "@neondatabase/serverless";
-const DATABASE_URL =
-  "postgresql://neondb_owner:npg_n5Ip3uZmotNh@ep-blue-thunder-adoo95lz-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require";
+import "dotenv/config";
 
-const consulta = neon(DATABASE_URL);
+const consulta = neon(process.env.DATABASE_URL);
 
 // GET /api/getAttendanceByStudent
 export async function GET(request) {
