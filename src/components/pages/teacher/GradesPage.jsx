@@ -1,20 +1,37 @@
 import React, { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import {
-  Select, SelectTrigger, SelectContent, SelectItem, SelectValue,
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
 } from "@/components/ui/select";
 import {
-  Table, TableHeader, TableHead, TableRow, TableBody, TableCell,
+  Table,
+  TableHeader,
+  TableHead,
+  TableRow,
+  TableBody,
+  TableCell,
 } from "@/components/ui/table";
 import ReflectionButton from "@/components/shared/buttonsIbelic/reflectionButton";
 import useTeacherData from "@/hooks/useTeacherData";
 import useStudentsByCourse from "@/hooks/useStudentsByCourse";
+import {
+  HoverCard,
+  HoverCardTrigger,
+  HoverCardContent,
+} from "@/components/ui/hover-card";
+import { Info } from "lucide-react"; // icono de info
 
 export default function GradesPage() {
   const [teacherName, setTeacherName] = useState("");
   const [course, setCourse] = useState("ninguno");
   const [subject, setSubject] = useState("ninguno");
   const [grades, setGrades] = useState([]);
+  const [typeGrade, setTypeGrade] = useState("Trimestre");
+  const [period, setPeriod] = useState(1);
 
   // Obtener profesor desde URL
   useEffect(() => {
@@ -25,6 +42,11 @@ export default function GradesPage() {
   // Info del profesor
   const { teacher, subjects } = useTeacherData(teacherName);
 
+  // Selecciona automáticamente la materia si solo hay una
+  useEffect(() => {
+    if (subjects.length === 1) setSubject(subjects[0]);
+  }, [subjects]);
+
   // Estudiantes por curso
   const { students } = useStudentsByCourse(course);
 
@@ -34,19 +56,51 @@ export default function GradesPage() {
     const formatted = students.map((s) => ({
       id: s.id,
       name: s.name,
-      nota1: "",
-      nota2: "",
-      notaFinal: "",
+      grade: "",
     }));
     setGrades(formatted);
   }, [students]);
 
-  const handleChange = (id, field, value) =>
-    setGrades((prev) => prev.map((g) => (g.id === id ? { ...g, [field]: value } : g)));
-
-  const handleSave = () => console.log("Notas guardadas:", grades);
+  const handleChange = (id, value) =>
+    setGrades((prev) =>
+      prev.map((g) => (g.id === id ? { ...g, grade: value } : g))
+    );
 
   const isDisabled = course === "ninguno" || subject === "ninguno";
+
+  // Guardar notas en grades
+  const handleSave = async () => {
+    if (isDisabled) return;
+    try {
+      // Obtener id_subject según materia
+      const selectedSubject = teacher.subjects.find((s) => s === subject);
+      const id_subject = selectedSubject?.id_subject || null;
+
+      if (!id_subject) throw new Error("No se encontró id de la materia");
+
+      // Mapear alumnos a formato de tabla
+      const payload = grades.map((g) => ({
+        id_student: g.id,
+        id_subject,
+        type_grade: typeGrade,
+        period,
+        grade: parseFloat(g.grade) || 0,
+      }));
+
+      const res = await fetch("/api/saveGrades", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) throw new Error("Error al guardar notas");
+
+      alert("Notas guardadas correctamente!");
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
+    }
+  };
 
   return (
     <main className="flex flex-col items-center w-full p-8 space-y-6">
@@ -76,7 +130,7 @@ export default function GradesPage() {
             <SelectValue placeholder="Seleccionar materia" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="ninguno">Ninguno</SelectItem>
+            {subjects.length > 1 && <SelectItem value="ninguno">Ninguno</SelectItem>}
             {subjects.map((subj) => (
               <SelectItem key={subj} value={subj}>
                 {subj}
@@ -84,9 +138,43 @@ export default function GradesPage() {
             ))}
           </SelectContent>
         </Select>
+
+        {/* Tipo de nota */}
+        <Select value={typeGrade} onValueChange={setTypeGrade}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Tipo de nota" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Trimestre">Trimestre</SelectItem>
+            <SelectItem value="Cuatrimestre">Cuatrimestre</SelectItem>
+          </SelectContent>
+        </Select>
+
+        {/* Período */}
+        <Input
+          type="number"
+          value={period}
+          onChange={(e) => setPeriod(parseInt(e.target.value))}
+          className="w-20 text-center"
+        />
       </div>
 
       {/* Tabla */}
+<div className="flex items-center gap-2">
+  <h3 className="text-lg font-medium">Tabla de Notas</h3>
+  <HoverCard>
+    <HoverCardTrigger>
+      <Info className="w-4 h-4 text-gray-500 cursor-pointer" />
+    </HoverCardTrigger>
+    <HoverCardContent className="w-64 text-sm text-gray-700">
+      Cada fila representa un alumno del curso seleccionado. <br />
+      - Ingresa la nota numérica correspondiente en la columna "Nota". <br />
+      - Tipo de nota: selecciona si es Trimestre o Cuatrimestre. <br />
+      - Período: indica el período de la nota (1, 2, etc). <br />
+      Al hacer click en "Guardar Notas", se enviarán todos los valores al backend y se guardarán en la tabla <strong>grades</strong>.
+    </HoverCardContent>
+  </HoverCard>
+</div>
       <div className="relative w-2/3 mt-6">
         {isDisabled && (
           <div className="absolute inset-0 flex items-center justify-center bg-white/80 backdrop-blur-sm rounded-lg border border-gray-300">
@@ -104,37 +192,17 @@ export default function GradesPage() {
           <TableHeader>
             <TableRow>
               <TableHead>Alumno</TableHead>
-              <TableHead>Nota 1</TableHead>
-              <TableHead>Nota 2</TableHead>
-              <TableHead>Final</TableHead>
+              <TableHead>Nota</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {grades.map(({ id, name, nota1, nota2, notaFinal }) => (
+            {grades.map(({ id, name, grade }) => (
               <TableRow key={id}>
                 <TableCell>{name}</TableCell>
                 <TableCell>
                   <Input
-                    value={nota1}
-                    onChange={(e) => handleChange(id, "nota1", e.target.value)}
-                    className="w-20 text-center"
-                    disabled={isDisabled}
-                  />
-                </TableCell>
-                <TableCell>
-                  <Input
-                    value={nota2}
-                    onChange={(e) => handleChange(id, "nota2", e.target.value)}
-                    className="w-20 text-center"
-                    disabled={isDisabled}
-                  />
-                </TableCell>
-                <TableCell>
-                  <Input
-                    value={notaFinal}
-                    onChange={(e) =>
-                      handleChange(id, "notaFinal", e.target.value)
-                    }
+                    value={grade}
+                    onChange={(e) => handleChange(id, e.target.value)}
                     className="w-20 text-center"
                     disabled={isDisabled}
                   />
@@ -144,6 +212,7 @@ export default function GradesPage() {
           </TableBody>
         </Table>
       </div>
+
 
       <ReflectionButton onClick={handleSave} disabled={isDisabled}>
         Guardar Notas
