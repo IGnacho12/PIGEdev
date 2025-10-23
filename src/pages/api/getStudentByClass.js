@@ -9,32 +9,39 @@ const consulta = neon(process.env.DATABASE_URL);
 export async function GET(request) {
   try {
     const url = new URL(request.url);
-    const name = url.searchParams.get("name") || "";
+    const CLASS = url.searchParams.get("class") || "1º";
+    const SECTION = url.searchParams.get("section") || "I";
 
-    if (!name) {
+    if (!CLASS) {
       return new Response(
-        JSON.stringify({ error: "El parámetro 'name' es requerido" }),
+        JSON.stringify({
+          error: "El parámetro 'classAndSection' es requerido",
+        }),
         {
           status: 400,
           headers: { "Content-Type": "application/json" },
         }
       );
     }
-    console.log("nombre de la linda", name)
 
     // Obtener información del profesor, que materias cursa, en que cursos da clases y sus datos.
     const response = await consulta`
-SELECT 
-  t.name AS name,
-  array_agg(s.name) AS subjects
-FROM 
-  teacher_subjects ts
-JOIN 
-  teachers t ON t.id_teacher = ts.teacher_id
-JOIN 
-  subjects s ON s.id_subject = ts.subject_id
-WHERE t.name = ${name}
-GROUP BY t.name;
+          SELECT 
+          s.id,
+          s.name,
+          s.dni,
+          s.avatar,
+          c.curso,
+          c.division
+          FROM 
+          students s
+          JOIN 
+          cursos c ON s.id_curso = c.id_curso
+          WHERE 
+          c.curso = ${CLASS}    -- reemplaza con el curso deseado
+          AND c.division = ${SECTION} -- reemplaza con la división deseada
+          ORDER BY 
+          s.name;
 
     `;
     // teacher.name -> Nombre del profe

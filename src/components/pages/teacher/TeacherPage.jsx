@@ -24,7 +24,6 @@ export default function TeacherPage() {
       {teacherName ? (
         <main className="px-3 xl:p-0 overflow-auto scrollbar-hide space-y-16 mb-48">
           <Hero name={teacherName} />
-          <GradesPage name={teacherName} />
         </main>
       ) : (
         <Empty className="from-muted/50 to-background h-full">

@@ -9,7 +9,8 @@ export default function Hero({ name }) {
 
       <section className="flex justify-around w-1/3 mt-12">
         <div className="flex flex-col items-center text-center space-y-2">
-          <WaveButton content="Notas" />
+          <WaveButton content="Notas" href={`/profesor/notas?name=${name}`} />
+
           <p className="text-sm text-gray-600 w-32">
             Gestioná las calificaciones de tus alumnos.
           </p>
