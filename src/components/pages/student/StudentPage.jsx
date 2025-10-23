@@ -18,7 +18,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/ToolTip";
+} from "@/components/ui/tooltip";
 
 export default function StudentPage() {
   const [studentName, setStudentName] = useState("");
