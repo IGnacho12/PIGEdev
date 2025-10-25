@@ -7,15 +7,6 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Table,
-  TableHeader,
-  TableHead,
-  TableRow,
-  TableBody,
-  TableCell,
-} from "@/components/ui/table";
-import ReflectionButton from "@/components/shared/buttonsIbelic/reflectionButton";
 import useTeacherData from "@/hooks/useTeacherData";
 import useStudentsByCourse from "@/hooks/useStudentsByCourse";
 import {
@@ -24,6 +15,8 @@ import {
   HoverCardContent,
 } from "@/components/ui/hover-card";
 import { Info } from "lucide-react"; // icono de info
+import { CloudUpload } from "lucide-react";
+import TableGrade from "./grades/TableGrades";
 
 export default function GradesPage() {
   const [teacherName, setTeacherName] = useState("");
@@ -109,7 +102,7 @@ export default function GradesPage() {
 
       {/* Selects */}
       <div className="flex gap-4">
-        <Select value={course} onValueChange={setCourse}>
+        <Select id="selectClass" value={course} onValueChange={setCourse}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Seleccionar curso" />
           </SelectTrigger>
@@ -130,7 +123,9 @@ export default function GradesPage() {
             <SelectValue placeholder="Seleccionar materia" />
           </SelectTrigger>
           <SelectContent>
-            {subjects.length > 1 && <SelectItem value="ninguno">Ninguno</SelectItem>}
+            {subjects.length > 1 && (
+              <SelectItem value="ninguno">Ninguno</SelectItem>
+            )}
             {subjects.map((subj) => (
               <SelectItem key={subj} value={subj}>
                 {subj}
@@ -139,84 +134,39 @@ export default function GradesPage() {
           </SelectContent>
         </Select>
 
-        {/* Tipo de nota */}
-        <Select value={typeGrade} onValueChange={setTypeGrade}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Tipo de nota" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="Trimestre">Trimestre</SelectItem>
-            <SelectItem value="Cuatrimestre">Cuatrimestre</SelectItem>
-          </SelectContent>
-        </Select>
-
-        {/* Período */}
-        <Input
-          type="number"
-          value={period}
-          onChange={(e) => setPeriod(parseInt(e.target.value))}
-          className="w-20 text-center"
-        />
       </div>
 
       {/* Tabla */}
-<div className="flex items-center gap-2">
-  <h3 className="text-lg font-medium">Tabla de Notas</h3>
-  <HoverCard>
-    <HoverCardTrigger>
-      <Info className="w-4 h-4 text-gray-500 cursor-pointer" />
-    </HoverCardTrigger>
-    <HoverCardContent className="w-64 text-sm text-gray-700">
-      Cada fila representa un alumno del curso seleccionado. <br />
-      - Ingresa la nota numérica correspondiente en la columna "Nota". <br />
-      - Tipo de nota: selecciona si es Trimestre o Cuatrimestre. <br />
-      - Período: indica el período de la nota (1, 2, etc). <br />
-      Al hacer click en "Guardar Notas", se enviarán todos los valores al backend y se guardarán en la tabla <strong>grades</strong>.
-    </HoverCardContent>
-  </HoverCard>
-</div>
-      <div className="relative w-2/3 mt-6">
-        {isDisabled && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white/80 backdrop-blur-sm rounded-lg border border-gray-300">
-            <p className="text-gray-600 font-medium">
-              Seleccioná un curso y una materia válidos para continuar
-            </p>
-          </div>
-        )}
+      <div className="flex items-center gap-2">
+        <h3 className="text-lg font-medium">Tabla de Notas</h3>
+        <HoverCard>
+          <HoverCardTrigger>
+            <Info className="w-4 h-4 text-gray-500 cursor-pointer" />
+          </HoverCardTrigger>
+          <HoverCardContent className="w-64 text-sm text-gray-700">
+            Cada fila representa un alumno del curso seleccionado. <br />
+            - Ingresa la nota numérica correspondiente en la columna "Nota".{" "}
+            <br />
+            - Tipo de nota: selecciona si es Trimestre o Cuatrimestre. <br />
+            - Período: indica el período de la nota (1, 2, etc). <br />
+            Al hacer click en "Guardar Notas", se enviarán todos los valores al
+            backend y se guardarán en la tabla <strong>grades</strong>.
+          </HoverCardContent>
+        </HoverCard>
+      </div>
+      <div className="relative mt-6">
+       <TableGrade></TableGrade>
 
-        <Table
-          className={`${
-            isDisabled ? "opacity-20 pointer-events-none" : ""
-          } bg-[var(--bg-light)] border border-text-muted/30`}
-        >
-          <TableHeader>
-            <TableRow>
-              <TableHead>Alumno</TableHead>
-              <TableHead>Nota</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {grades.map(({ id, name, grade }) => (
-              <TableRow key={id}>
-                <TableCell>{name}</TableCell>
-                <TableCell>
-                  <Input
-                    value={grade}
-                    onChange={(e) => handleChange(id, e.target.value)}
-                    className="w-20 text-center"
-                    disabled={isDisabled}
-                  />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
       </div>
 
-
-      <ReflectionButton onClick={handleSave} disabled={isDisabled}>
-        Guardar Notas
-      </ReflectionButton>
+      <button class="group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-md bg-neutral-950 px-6 font-medium text-neutral-200 duration-200 hover:scale-105 active:scale-80 transtiion-all hover:cursor-pointer">
+        <div class="translate-x-0 opacity-100 transition group-hover:-translate-x-[150%] group-hover:opacity-0">
+          Guardar cambios
+        </div>
+        <div class="absolute translate-x-[150%] opacity-0 transition group-hover:translate-x-0 group-hover:opacity-100">
+          <CloudUpload />
+        </div>
+      </button>
     </main>
   );
 }

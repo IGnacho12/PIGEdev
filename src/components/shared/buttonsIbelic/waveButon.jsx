@@ -1,7 +1,10 @@
-export default function WaveButton({ content, href = "#" }) {
+export default function WaveButton({ content, href = "#", className = "" }) {
   return (
     <>
-      <a href={href} className="group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-md border border-neutral-200 bg-white font-medium">
+      <a
+        href={href}
+        className={`group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-md border border-neutral-200 bg-white font-medium ${className}`}
+      >
         <div className="inline-flex h-12 translate-y-0 items-center justify-center px-6 text-neutral-950 transition duration-500 group-hover:-translate-y-[150%]">
           {content}
         </div>

@@ -9,6 +9,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
+import TableGrade from "./grades/TableGrades";
 
 export default function TeacherPage() {
   const [teacherName, setTeacherName] = useState("");
@@ -24,6 +25,7 @@ export default function TeacherPage() {
       {teacherName ? (
         <main className="px-3 xl:p-0 overflow-auto scrollbar-hide space-y-16 mb-48">
           <Hero name={teacherName} />
+          <TableGrade></TableGrade>
         </main>
       ) : (
         <Empty className="from-muted/50 to-background h-full">
