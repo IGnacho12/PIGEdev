@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectTrigger,
@@ -8,23 +7,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import useTeacherData from "@/hooks/useTeacherData";
-import useStudentsByCourse from "@/hooks/useStudentsByCourse";
-import {
-  HoverCard,
-  HoverCardTrigger,
-  HoverCardContent,
-} from "@/components/ui/hover-card";
-import { Info } from "lucide-react"; // icono de info
-import { CloudUpload } from "lucide-react";
+import useStudentsGradesByClass from "@/hooks/useStudentsGradeByClass";
 import TableGrade from "./grades/TableGrades";
+import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
+import { Info, CloudUpload } from "lucide-react";
 
 export default function GradesPage() {
   const [teacherName, setTeacherName] = useState("");
   const [course, setCourse] = useState("ninguno");
+  console.log(course)
   const [subject, setSubject] = useState("ninguno");
-  const [grades, setGrades] = useState([]);
-  const [typeGrade, setTypeGrade] = useState("Trimestre");
-  const [period, setPeriod] = useState(1);
+  const [typeGrade, setTypeGrade] = useState("trimestre");
 
   // Obtener profesor desde URL
   useEffect(() => {
@@ -40,44 +33,28 @@ export default function GradesPage() {
     if (subjects.length === 1) setSubject(subjects[0]);
   }, [subjects]);
 
-  // Estudiantes por curso
-  const { students } = useStudentsByCourse(course);
+  // Hook para traer estudiantes del curso seleccionado
+const { students, loading, error } = useStudentsGradesByClass(course);
+console.log(students)
 
-  // Formatear estructura de notas
-  useEffect(() => {
-    if (!students?.length) return;
-    const formatted = students.map((s) => ({
-      id: s.id,
-      name: s.name,
-      grade: "",
-    }));
-    setGrades(formatted);
-  }, [students]);
-
-  const handleChange = (id, value) =>
-    setGrades((prev) =>
-      prev.map((g) => (g.id === id ? { ...g, grade: value } : g))
-    );
 
   const isDisabled = course === "ninguno" || subject === "ninguno";
 
-  // Guardar notas en grades
   const handleSave = async () => {
     if (isDisabled) return;
+
     try {
-      // Obtener id_subject según materia
       const selectedSubject = teacher.subjects.find((s) => s === subject);
       const id_subject = selectedSubject?.id_subject || null;
 
       if (!id_subject) throw new Error("No se encontró id de la materia");
 
       // Mapear alumnos a formato de tabla
-      const payload = grades.map((g) => ({
-        id_student: g.id,
+      const payload = students.map((g) => ({
+        id_student: g.id, // Asegurate de que use el id real si existe
         id_subject,
         type_grade: typeGrade,
-        period,
-        grade: parseFloat(g.grade) || 0,
+        grade: parseFloat(g.definitiva) || 0, // O cualquier campo que uses
       }));
 
       const res = await fetch("/api/saveGrades", {
@@ -87,7 +64,6 @@ export default function GradesPage() {
       });
 
       if (!res.ok) throw new Error("Error al guardar notas");
-
       alert("Notas guardadas correctamente!");
     } catch (err) {
       console.error(err);
@@ -123,9 +99,7 @@ export default function GradesPage() {
             <SelectValue placeholder="Seleccionar materia" />
           </SelectTrigger>
           <SelectContent>
-            {subjects.length > 1 && (
-              <SelectItem value="ninguno">Ninguno</SelectItem>
-            )}
+            {subjects.length > 1 && <SelectItem value="ninguno">Ninguno</SelectItem>}
             {subjects.map((subj) => (
               <SelectItem key={subj} value={subj}>
                 {subj}
@@ -133,7 +107,6 @@ export default function GradesPage() {
             ))}
           </SelectContent>
         </Select>
-
       </div>
 
       {/* Tabla */}
@@ -144,9 +117,8 @@ export default function GradesPage() {
             <Info className="w-4 h-4 text-gray-500 cursor-pointer" />
           </HoverCardTrigger>
           <HoverCardContent className="w-64 text-sm text-gray-700">
-            Cada fila representa un alumno del curso seleccionado. <br />
-            - Ingresa la nota numérica correspondiente en la columna "Nota".{" "}
-            <br />
+            Cada fila representa un alumno del curso seleccionado. <br />-
+            Ingresa la nota numérica correspondiente en la columna "Nota". <br />
             - Tipo de nota: selecciona si es Trimestre o Cuatrimestre. <br />
             - Período: indica el período de la nota (1, 2, etc). <br />
             Al hacer click en "Guardar Notas", se enviarán todos los valores al
@@ -154,16 +126,19 @@ export default function GradesPage() {
           </HoverCardContent>
         </HoverCard>
       </div>
-      <div className="relative mt-6">
-       <TableGrade></TableGrade>
 
+      <div className="relative mt-6 w-full">
+        <TableGrade students={students} type={typeGrade} />
       </div>
 
-      <button class="group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-md bg-neutral-950 px-6 font-medium text-neutral-200 duration-200 hover:scale-105 active:scale-80 transtiion-all hover:cursor-pointer">
-        <div class="translate-x-0 opacity-100 transition group-hover:-translate-x-[150%] group-hover:opacity-0">
+      <button
+        onClick={handleSave}
+        className="group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-md bg-neutral-950 px-6 font-medium text-neutral-200 duration-200 hover:scale-105 active:scale-90 transition-all hover:cursor-pointer"
+      >
+        <div className="translate-x-0 opacity-100 transition group-hover:-translate-x-[150%] group-hover:opacity-0">
           Guardar cambios
         </div>
-        <div class="absolute translate-x-[150%] opacity-0 transition group-hover:translate-x-0 group-hover:opacity-100">
+        <div className="absolute translate-x-[150%] opacity-0 transition group-hover:translate-x-0 group-hover:opacity-100">
           <CloudUpload />
         </div>
       </button>
