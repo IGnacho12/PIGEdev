@@ -3,7 +3,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/ToolTip";
+} from "@/components/ui/tooltip";
 
 export default function PigeToolTip() {
   return (

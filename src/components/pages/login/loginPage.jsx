@@ -9,17 +9,11 @@ import {
 import useFetchPeople from "@/hooks/useFetchPeople";
 
 export default function LoginPage() {
-  // Profesor - Estudiante
   const [entity, setEntity] = useState(null);
-
-  // Filtro
   const [filter, setFilter] = useState("");
-
-  // Modal
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedPerson, setSelectedPerson] = useState(null);
 
-  // Detecta el tipo de login (solo client-side)
   useEffect(() => {
     if (typeof window !== "undefined") {
       const typeOfLogin = new URLSearchParams(window.location.search).get(
@@ -29,18 +23,17 @@ export default function LoginPage() {
     }
   }, []);
 
-  // Hook siempre llamado
   const { data, loading } = useFetchPeople(entity);
 
   const people = Array.isArray(data) ? data : [];
 
-  // Filtro por nombre o DNI
   const filtered = people.filter((p) => {
-    const name = (p?.name || "").toLowerCase();
+    const nombre = (p?.nombre || "").toLowerCase(); // Siempre usa 'nombre' normalizado
     const dni = String(p?.dni || "");
     const query = filter.toLowerCase();
-    return name.includes(query) || dni.includes(query);
+    return nombre.includes(query) || dni.includes(query);
   });
+  console.log(filtered)
 
   return (
     <StrictMode>
@@ -57,7 +50,6 @@ export default function LoginPage() {
           </span>
         </p>
 
-        {/* Barra de búsqueda */}
         <InputGroup className="w-fit mx-auto mt-12 bg-[var(--bg-light)] dark:bg-[var(--bg-light)]">
           <InputGroupAddon>
             {entity
@@ -77,7 +69,6 @@ export default function LoginPage() {
           </InputGroupAddon>
         </InputGroup>
 
-        {/* Resultados */}
         <section className="flex flex-col gap-3 mx-auto w-full sm:w-2/3 lg:w-1/3 p-2 mt-6">
           {loading && <h1>Cargando datos...</h1>}
 
@@ -85,14 +76,15 @@ export default function LoginPage() {
             <h1>No se han encontrado resultados para su búsqueda</h1>
           )}
 
+          {/* 3. Renderizar usando los datos normalizados */}
           {!loading &&
             filtered.map((p) => (
               <CardPerson
                 key={p.dni}
-                name={p.name}
+                nombre={p.nombre}
                 dni={p.dni}
-                classAndSection={p.class_and_section}
-                subjects={p.subject_name}
+                cursoYDivision={p.curso_y_division}
+                materias={p.materias}
                 avatar={p.avatar}
                 onSelect={() => {
                   setSelectedPerson(p);

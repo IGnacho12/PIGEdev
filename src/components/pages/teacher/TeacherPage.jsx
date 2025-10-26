@@ -12,20 +12,19 @@ import {
 import TableGrade from "./grades/TableGrades";
 
 export default function TeacherPage() {
-  const [teacherName, setTeacherName] = useState("");
+  const [nombreProfesor, setNombreProfesor] = useState("");
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const name = params.get("name");
-    setTeacherName(name || "");
+    setNombreProfesor(name || "");
   }, []);
 
   return (
     <>
-      {teacherName ? (
+      {nombreProfesor ? (
         <main className="px-3 xl:p-0 overflow-auto scrollbar-hide space-y-16 mb-48">
-          <Hero name={teacherName} />
-          <TableGrade></TableGrade>
+          <Hero name={nombreProfesor} />
         </main>
       ) : (
         <Empty className="from-muted/50 to-background h-full">

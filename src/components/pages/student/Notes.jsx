@@ -1,3 +1,4 @@
+// Notes.jsx
 import React from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import useFetch from "@/hooks/useFetch";
@@ -11,32 +12,45 @@ import {
   TableCell,
 } from "@/components/ui/table";
 
-export default function Notes({ name }) {
+export default function Notes({ nombre = "Castillo Ignacio" }) {
+  
+  // 🔴 CORREGIDO: Se usa la variable 'nombre' (prop) en la URL, 
+  // ya que la variable 'name' no estaba definida.
   const { data: grades = [], loading, error } = useFetch(
-    `/api/getGradesByStudent?name=${name}`
+    `/api/getGradesByStudent?name=${nombre}`
   );
 
+  // Se añade una comprobación adicional para 'error'
+  if (error) return <p className="text-center text-red-500">Error al cargar las notas: {error.message || "Verifique la conexión a la API."}</p>;
   if (loading) return <SkeletonLoader />;
-  if (!grades.length) return <p>No se encontraron grades para este alumno.</p>;
+  if (!grades.length) return <p className="text-center">No se encontraron notas para este alumno.</p>;
 
   // ---- Agrupar notas por materia ----
-  const subjectsMap = {};
-  grades.forEach((grade) => {
-    const subjectName = grade.subject;
-    const gradeValue = Number(grade.grade);
-    if (!subjectsMap[subjectName]) subjectsMap[subjectName] = [];
-    subjectsMap[subjectName].push(gradeValue);
+  const materiasMap = {};
+  grades.forEach((notaIndividual) => {
+    
+    // Usamos 'materia' y 'nota' que son las claves esperadas de la API en español
+    const nombreMateria = notaIndividual.materia; 
+    const valorNota = Number(notaIndividual.nota); 
+    
+    if (!materiasMap[nombreMateria]) materiasMap[nombreMateria] = [];
+    materiasMap[nombreMateria].push(valorNota);
   });
 
-  const subjects = Object.entries(subjectsMap).map(([name, grades]) => {
-    const total = grades.reduce((sum, n) => sum + n, 0);
-    const average = total / grades.length;
-    return { name, grades, average };
+  const materias = Object.entries(materiasMap).map(([nombre, notas]) => {
+    const total = notas.reduce((sum, n) => sum + n, 0);
+    const promedio = total / notas.length;
+    
+    return { 
+      nombre,
+      notas,
+      promedio
+    };
   });
 
-  const maxGradesCount =
-    subjects.length > 0
-      ? Math.max(...subjects.map((subject) => subject.grades.length))
+  const maxNotasCount =
+    materias.length > 0
+      ? Math.max(...materias.map((materia) => materia.notas.length))
       : 0;
 
   return (
@@ -46,7 +60,7 @@ export default function Notes({ name }) {
           <TableRow>
             <TableHead>Materia</TableHead>
             <TableHead>Promedio Actual</TableHead>
-            {Array.from({ length: maxGradesCount }).map((_, i) => (
+            {Array.from({ length: maxNotasCount }).map((_, i) => (
               <TableHead className="text-center" key={i}>
                 Nota {i + 1}
               </TableHead>
@@ -55,23 +69,29 @@ export default function Notes({ name }) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {subjects.map((subject, idx) => (
+          {materias.map((materia, idx) => ( 
             <TableRow key={idx}>
-              <TableCell>{subject.name}</TableCell>
-              <TableCell className="font-bold">{subject.average.toFixed(1)}</TableCell>
-              {subject.grades.map((n, i) => (
+              <TableCell>{materia.nombre}</TableCell>
+              <TableCell className="font-bold">{materia.promedio.toFixed(1)}</TableCell>
+              {materia.notas.map((n, i) => ( 
                 <TableCell className="text-center" key={i}>
                   {n}
                 </TableCell>
               ))}
-              <TableCell className="text-center">{subject.average.toFixed(0)}</TableCell>
+              {/* Rellenar celdas vacías si hay un número desigual de notas */}
+              {Array.from({ length: maxNotasCount - materia.notas.length }).map((_, i) => (
+                <TableCell key={`empty-${i}`} className="text-center text-muted-foreground">-</TableCell>
+              ))}
+              {/* Para la Nota Final, se puede usar el promedio redondeado si no hay una nota final explícita */}
+              <TableCell className="text-center font-semibold text-lg">{materia.promedio.toFixed(0)}</TableCell> 
             </TableRow>
           ))}
         </TableBody>
         <TableFooter>
           <TableRow>
             <TableCell colSpan={2}>Total Materias</TableCell>
-            <TableCell colSpan={maxGradesCount + 1}>{subjects.length}</TableCell>
+            {/* Se suma 1 a maxNotasCount para incluir la columna de Nota Final */}
+            <TableCell colSpan={maxNotasCount + 1}>{materias.length}</TableCell> 
           </TableRow>
         </TableFooter>
       </Table>
@@ -98,6 +118,9 @@ function SkeletonLoader() {
             <TableHead>
               <Skeleton className="h-4 w-[80px] rounded" />
             </TableHead>
+            <TableHead>
+              <Skeleton className="h-4 w-[80px] rounded" />
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -108,6 +131,9 @@ function SkeletonLoader() {
               </TableCell>
               <TableCell>
                 <Skeleton className="h-4 w-[80px] rounded" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-4 w-[60px] rounded" />
               </TableCell>
               <TableCell>
                 <Skeleton className="h-4 w-[60px] rounded" />

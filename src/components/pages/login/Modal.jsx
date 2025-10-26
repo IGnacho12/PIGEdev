@@ -16,14 +16,12 @@ import CardPerson from "./CardPerson";
 export default function Modal({ open, setOpen, person, type = "student" }) {
   const [password, setPassword] = useState("");
 
-  // valores posibles para type 1. "student" 2. "teacher"
-
   function checkPassword() {
-    const CORRECT_PASSWORD = person.password_value;
+    const CORRECT_PASSWORD = person.clave_acceso;
 
     if (password === CORRECT_PASSWORD) {
       console.log("✅ Iniciar sesión");
-      window.location.href = `/${type}?name=${encodeURIComponent(person.name)}`;
+      window.location.href = `/${type}?name=${encodeURIComponent(person.nombre)}`;
     } else {
       console.log("❌ Contraseña incorrecta");
     }
@@ -44,7 +42,7 @@ export default function Modal({ open, setOpen, person, type = "student" }) {
 
         <CardPerson
           className="mt-4"
-          name={person.name}
+          nombre={person.nombre}
           dni={person.dni}
           avatar={person.avatar}
         />

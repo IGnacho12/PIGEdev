@@ -8,20 +8,7 @@ export async function GET() {
   try {
     // Definir la respuesta a esta solicitud - Await para que espere para declarar esta variable
     const response = await consulta`
-SELECT 
-  t.id_profesor ,
-  t.nombre,
-  t.dni,
-  t.clave_acceso,
-  s.nombre AS nombre_materia
-FROM 
-  profesores_materias ts
-JOIN 
-  profesores t ON ts.id_profesor = t.id_profesor
-JOIN 
-  materias s ON ts.id_materia = s.id_materia
-ORDER BY 
-  t.id_profesor;
+select * from cursos
     `;
     return new Response(JSON.stringify(response));
   } catch (error) {

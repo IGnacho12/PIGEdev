@@ -4,7 +4,6 @@ import "dotenv/config";
 
 const consulta = neon(process.env.DATABASE_URL);
 
-// GET /api/getGradesByStudent?name=Ignacio
 export async function GET(request) {
   try {
     const url = new URL(request.url);
@@ -23,17 +22,16 @@ export async function GET(request) {
     // Traer todas las notas del alumno por nombre
     const notas = await consulta`
       SELECT 
-        g.id_grade,
-        g.id_student,
-        s.name AS subject,
-        g.type_grade,
-        g.period,
-        g.grade
-      FROM grades g
-      JOIN subjects s ON g.id_subject = s.id_subject
-      JOIN students st ON g.id_student = st.id
-      WHERE st.name ILIKE ${`%${name}%`}
-      ORDER BY g.id_subject, g.period;
+        g.id_nota AS id_nota,
+        g.id_estudiante AS id_estudiante,
+        s.nombre AS materia,
+        g.periodo AS periodo,
+        g.calificacion AS calificacion
+      FROM notas g
+      JOIN materias s ON g.id_materia = s.id_materia
+      JOIN estudiantes st ON g.id_estudiante = st.id_estudiante
+      WHERE st.nombre ILIKE ${`%${name}%`}
+      ORDER BY g.id_materia, g.periodo;
     `;
 
     return new Response(JSON.stringify(notas), {

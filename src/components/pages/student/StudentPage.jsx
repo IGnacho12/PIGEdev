@@ -21,20 +21,21 @@ import {
 } from "@/components/ui/tooltip";
 
 export default function StudentPage() {
-  const [studentName, setStudentName] = useState("");
+  const [nombreAlumno, setNombreAlumno] = useState("");
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const name = params.get("name");
-    setStudentName(name);
+    setNombreAlumno(name);
   }, []);
 
   return (
     <>
-      {studentName ? (
+      {nombreAlumno ? (
         <main className="px-3 xl:p-0 overflow-auto scrollbar-hide space-y-16">
-          <Hero name={studentName}></Hero>
-          <Notes name={studentName}></Notes>
-          <Attendance name={studentName}></Attendance>
+          <Hero name={nombreAlumno}></Hero>
+          <Notes nombre={nombreAlumno}></Notes>
+          <Attendance name={nombreAlumno}></Attendance>
           <Schedule></Schedule>
         </main>
       ) : (
@@ -43,13 +44,14 @@ export default function StudentPage() {
             <EmptyMedia variant="icon">👤</EmptyMedia>
             <EmptyTitle>Inicia sesión para continuar</EmptyTitle>
             <EmptyDescription>
-              Debes inciar sesión para poder acceder esta información.
+              Debes iniciar sesión para poder acceder esta información.
             </EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
             <a
               href="login"
-              class="relative after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:origin-bottom-right after:scale-x-0 after:bg-neutral-800 after:transition-transform after:duration-300 after:ease-[cubic-bezier(0.65_0.05_0.36_1)] hover:after:origin-bottom-left hover:after:scale-x-100"
+              // 🔴 CORREGIDO: Cambiado 'class' a 'className'
+              className="relative after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:origin-bottom-right after:scale-x-0 after:bg-neutral-800 after:transition-transform after:duration-300 after:ease-[cubic-bezier(0.65_0.05_0.36_1)] hover:after:origin-bottom-left hover:after:scale-x-100"
             >
               Ir a Iniciar{" "}
             </a>

@@ -1,24 +1,24 @@
 import useFetch from "@/hooks/useFetch";
 
 export default function useStudentsGradesByClass(course) {
-  if (!course || course === "ninguno") return { students: [] };
+  if (!course || course === "ninguno") return { estudiantes: [] };
 
-  const [curso, division] = course.split(" "); // ej: "1º I" -> ["1º", "I"]
+  const [curso, division] = course.split(" ");
 
   const { data, error, loading } = useFetch(
     `/api/getStudentsGradesByClass?class=${curso}&section=${division}`
   );
 
-  // Transformar datos al formato que espera TableGrade
-  const students = (data || []).map((s) => ({
-    id: s.id_student,
-    name: s.name,
+  const estudiantes = (data || []).map((s) => ({
+    id_estudiante: s.id_estudiante,
+    nombre: s.nombre,
+    // La normalización (?? 0) es crucial aquí:
     nota1: s.nota1 ?? 0,
     nota2: s.nota2 ?? 0,
     nota3: s.nota3 ?? 0,
-    attendance: s.attendance ?? 0,
-    definitiva: s.finalGrade ?? 0,
+    clases_totales: s.clases_totales ?? 0,
+    nota_final: s.nota_final ?? 0,
   }));
 
-  return { students, error, loading };
+  return { estudiantes, error, loading };
 }

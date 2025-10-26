@@ -1,13 +1,16 @@
 import React from "react";
 
 export default function ProgressCircle({ percentage = 1 }) {
+  // Función utilitaria interna
   const cleanPercentage = (value) => {
     const num = Number(value);
-    if (!Number.isFinite(num) || num < 0) return 0;
+    // Cambiado 'isFinite' por 'Number.isFinite' para mayor seguridad en JS
+    if (!Number.isFinite(num) || num < 0) return 0; 
     if (num > 100) return 100;
     return num;
   };
 
+  // Variables de lógica interna: 'pct', 'r', 'circ', 'strokePct'
   const pct = cleanPercentage(percentage);
   const r = 70;
   const circ = 2 * Math.PI * r;

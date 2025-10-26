@@ -2,13 +2,13 @@ import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function CardPerson({
-  name = "Terminator",
+  nombre = "Terminator",
   dni = "007",
   avatar,
-  onSelect, // callback para abrir modal
-  className = "", // Aquí recibimos las clases extra
-  classAndSection,
-  subjects,
+  onSelect,
+  className = "",
+  cursoYDivision,
+  materias,
 }) {
   return (
     <button
@@ -16,7 +16,7 @@ export default function CardPerson({
       className={`flex items-center gap-2 px-3 py-2 rounded-lg hover:cursor-pointer hover:scale-105 border-2 border-text-muted/20 hover:border-bg-light transition-all shadow-sm bg-[var(--bg-light)] dark:bg-[var(--bg)] ${className}`}
     >
       <Avatar className="rounded-full size-12">
-        <AvatarImage src={avatar} alt={name} />
+        <AvatarImage src={avatar} alt={nombre} />
         <AvatarFallback>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -40,19 +40,19 @@ export default function CardPerson({
 
       <article className="flex flex-col justify-between w-full">
         <div className="flex flex-col w-full">
-          <article className="flex-row flex  justify-between  items-center w-full">
+          <article className="flex-row flex 	justify-between 	items-center w-full">
             <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-              {name}
+              {nombre}
             </h1>
-            {subjects && (
-              <span className="text-xs text-gray-700">[ {subjects} ]</span>
+            {materias && (
+              <span className="text-xs text-gray-700">[ {materias} ]</span>
             )}
           </article>
-          <article className="flex-row flex  justify-between  items-center w-full">
+          <article className="flex-row flex 	justify-between 	items-center w-full">
             <span className="text-sm text-left text-gray-700 ">DNI: {dni}</span>
-             {classAndSection && (
-              <span className="text-xs text-gray-700">{classAndSection}</span>
-            )}
+             {cursoYDivision && (
+               <span className="text-xs text-gray-700">{cursoYDivision}</span>
+             )}
           </article>
         </div>
       </article>

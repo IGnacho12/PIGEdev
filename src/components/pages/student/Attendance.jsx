@@ -39,10 +39,9 @@ export default function Attendance({ name }) {
     { totales: 0, presentes: 0, tardanzas: 0, ausentes: 0 }
   );
 
-  general.porcentaje = Math.round(
-    ((general.presentes + general.tardanzas * 0.5) / general.totales) * 100
-  );
-
+general.porcentaje = Math.round(
+  ((general.presentes + general.tardanzas) / general.totales) * 100
+);
   return (
     <div className="w-full xl:w-4/5 mx-auto mt-10 flex flex-col gap-8 mb-40">
       <main className="flex flex-col xl:flex-row justify-around gap-10">

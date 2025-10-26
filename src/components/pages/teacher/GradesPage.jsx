@@ -1,147 +1,135 @@
-import React, { useState, useEffect } from "react";
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-  SelectValue,
-} from "@/components/ui/select";
-import useTeacherData from "@/hooks/useTeacherData";
-import useStudentsGradesByClass from "@/hooks/useStudentsGradeByClass";
+import React, { useState } from "react";
+import useFetch from "@/hooks/useFetch";
+
+import { Skeleton } from "@/components/ui/skeleton";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import TableGrade from "./grades/TableGrades";
-import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
-import { Info, CloudUpload } from "lucide-react";
 
-export default function GradesPage() {
-  const [teacherName, setTeacherName] = useState("");
-  const [course, setCourse] = useState("ninguno");
-  console.log(course)
-  const [subject, setSubject] = useState("ninguno");
-  const [typeGrade, setTypeGrade] = useState("trimestre");
+export default function GradesPage({ name }) {
+  const [cursoSeleccionado, setCursoSeleccionado] = useState(null);
+  const [materiaSeleccionada, setMateriaSeleccionada] = useState(null);
+  const [tipoEvaluacion, setTipoEvaluacion] = useState("trimestre");
 
-  // Obtener profesor desde URL
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    setTeacherName(params.get("name") || "");
-  }, []);
+  // 1️⃣ Fetch de cursos y profesor
+  const { data: cursos = [], loading: cargandoCursos } = useFetch("/api/getCursos");
+  const { data: teacherInfo, loading: loadingTeacherInfo } = useFetch(
+    `/api/getTeacherInfoByName?name=${name}`
+  );
 
-  // Info del profesor
-  const { teacher, subjects } = useTeacherData(teacherName);
+  // 2️⃣ Asegurar que materias exista
+  const materias = Array.isArray(teacherInfo?.materias)
+    ? teacherInfo.materias
+    : [];
 
-  // Selecciona automáticamente la materia si solo hay una
-  useEffect(() => {
-    if (subjects.length === 1) setSubject(subjects[0]);
-  }, [subjects]);
+  // 3️⃣ Fetch de alumnos según curso y materia
+  const fetchAlumnosUrl =
+    cursoSeleccionado && materiaSeleccionada
+      ? `/api/getStudentsGrades?cursoId=${cursoSeleccionado.id_curso}&materiaId=${materiaSeleccionada.id_subject}`
+      : null;
 
-  // Hook para traer estudiantes del curso seleccionado
-const { students, loading, error } = useStudentsGradesByClass(course);
-console.log(students)
+  const { data: alumnos = [], loading: cargandoAlumnos } = useFetch(fetchAlumnosUrl);
 
+  // 🔄 Manejo de cambios
+  const manejarCambioCurso = (idCurso) => {
+    const id = Number(idCurso);
+    const curso = cursos.find((c) => c.id_curso === id) || null;
+    setCursoSeleccionado(curso);
+    setMateriaSeleccionada(null);
 
-  const isDisabled = course === "ninguno" || subject === "ninguno";
-
-  const handleSave = async () => {
-    if (isDisabled) return;
-
-    try {
-      const selectedSubject = teacher.subjects.find((s) => s === subject);
-      const id_subject = selectedSubject?.id_subject || null;
-
-      if (!id_subject) throw new Error("No se encontró id de la materia");
-
-      // Mapear alumnos a formato de tabla
-      const payload = students.map((g) => ({
-        id_student: g.id, // Asegurate de que use el id real si existe
-        id_subject,
-        type_grade: typeGrade,
-        grade: parseFloat(g.definitiva) || 0, // O cualquier campo que uses
-      }));
-
-      const res = await fetch("/api/saveGrades", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) throw new Error("Error al guardar notas");
-      alert("Notas guardadas correctamente!");
-    } catch (err) {
-      console.error(err);
-      alert(err.message);
+    // Cambiar tipo de evaluación si es necesario
+    if (curso && curso.curso.startsWith("5")) {
+      setTipoEvaluacion("cuatrimestre");
+    } else {
+      setTipoEvaluacion("trimestre");
     }
   };
 
+  const manejarCambioMateria = (idMateria) => {
+    const id = Number(idMateria);
+    const materia = materias.find((m) => m.id_subject === id) || null;
+    setMateriaSeleccionada(materia);
+  };
+
+  if (cargandoCursos || loadingTeacherInfo) {
+    return <GradesPageSkeleton />;
+  }
+
+  const tituloPagina =
+    cursoSeleccionado && materiaSeleccionada
+      ? `Notas de ${materiaSeleccionada.name} - ${cursoSeleccionado.curso} ${cursoSeleccionado.division}`
+      : "Seleccione un Curso y una Materia";
+
   return (
-    <main className="flex flex-col items-center w-full p-8 space-y-6">
-      <h1 className="text-3xl font-bold">Gestión de Notas</h1>
-      <h2>Profesor: {teacherName}</h2>
+    <div className="w-full xl:w-4/5 mx-auto space-y-8 mt-12">
+      <h2 className="text-3xl font-semibold text-center">{tituloPagina}</h2>
 
-      {/* Selects */}
-      <div className="flex gap-4">
-        <Select id="selectClass" value={course} onValueChange={setCourse}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Seleccionar curso" />
+      <section className="flex flex-col md:flex-row gap-4 justify-center">
+        {/* Selector de Curso */}
+        <Select
+          onValueChange={manejarCambioCurso}
+          value={cursoSeleccionado ? String(cursoSeleccionado.id_curso) : ""}
+        >
+          <SelectTrigger className="w-full md:w-[250px] bg-[var(--bg-light)]">
+            <SelectValue placeholder="Selecciona un curso" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="ninguno">Ninguno</SelectItem>
-            {[...Array(7)].map((_, y) =>
-              ["I", "II", "III", "IV", "V"].map((div) => (
-                <SelectItem key={`${y + 1}${div}`} value={`${y + 1}º ${div}`}>
-                  {y + 1}°{div}
-                </SelectItem>
-              ))
-            )}
-          </SelectContent>
-        </Select>
-
-        <Select value={subject} onValueChange={setSubject}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Seleccionar materia" />
-          </SelectTrigger>
-          <SelectContent>
-            {subjects.length > 1 && <SelectItem value="ninguno">Ninguno</SelectItem>}
-            {subjects.map((subj) => (
-              <SelectItem key={subj} value={subj}>
-                {subj}
+            {cursos.map((c) => (
+              <SelectItem key={c.id_curso} value={String(c.id_curso)}>
+                {c.curso} {c.division}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
-      </div>
 
-      {/* Tabla */}
-      <div className="flex items-center gap-2">
-        <h3 className="text-lg font-medium">Tabla de Notas</h3>
-        <HoverCard>
-          <HoverCardTrigger>
-            <Info className="w-4 h-4 text-gray-500 cursor-pointer" />
-          </HoverCardTrigger>
-          <HoverCardContent className="w-64 text-sm text-gray-700">
-            Cada fila representa un alumno del curso seleccionado. <br />-
-            Ingresa la nota numérica correspondiente en la columna "Nota". <br />
-            - Tipo de nota: selecciona si es Trimestre o Cuatrimestre. <br />
-            - Período: indica el período de la nota (1, 2, etc). <br />
-            Al hacer click en "Guardar Notas", se enviarán todos los valores al
-            backend y se guardarán en la tabla <strong>grades</strong>.
-          </HoverCardContent>
-        </HoverCard>
-      </div>
+        {/* Selector de Materia */}
+        <Select
+          onValueChange={manejarCambioMateria}
+          value={materiaSeleccionada ? String(materiaSeleccionada.id_subject) : ""}
+          disabled={!cursoSeleccionado || materias.length === 0}
+        >
+          <SelectTrigger className="w-full md:w-[250px] bg-[var(--bg-light)]">
+            <SelectValue placeholder="Selecciona una materia" />
+          </SelectTrigger>
+          <SelectContent>
+            {materias.map((m) => (
+              <SelectItem key={m.id_subject} value={String(m.id_subject)}>
+                {m.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </section>
 
-      <div className="relative mt-6 w-full">
-        <TableGrade students={students} type={typeGrade} />
-      </div>
-
-      <button
-        onClick={handleSave}
-        className="group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-md bg-neutral-950 px-6 font-medium text-neutral-200 duration-200 hover:scale-105 active:scale-90 transition-all hover:cursor-pointer"
-      >
-        <div className="translate-x-0 opacity-100 transition group-hover:-translate-x-[150%] group-hover:opacity-0">
-          Guardar cambios
-        </div>
-        <div className="absolute translate-x-[150%] opacity-0 transition group-hover:translate-x-0 group-hover:opacity-100">
-          <CloudUpload />
-        </div>
-      </button>
-    </main>
+      {/* Tabla de Calificaciones */}
+      <section>
+        {cargandoAlumnos  ? (
+          <GradesPageSkeleton />
+        ) : cursoSeleccionado && materiaSeleccionada ? (
+          <TableGrade students={alumnos} type={tipoEvaluacion} />
+        ) : (
+          <p className="text-center text-text-muted mt-10">
+            Utiliza los selectores de arriba para cargar la lista de alumnos y comenzar a
+            gestionar las notas.
+          </p>
+        )}
+      </section>
+    </div>
   );
+}
+
+
+// ---- Skeleton Loader ----
+function GradesPageSkeleton() {
+    return (
+        <div className="w-full xl:w-4/5 mx-auto space-y-8 mt-12">
+            <Skeleton className="h-10 w-3/4 mx-auto rounded" />
+            <div className="flex flex-col md:flex-row gap-4 justify-center">
+                <Skeleton className="h-10 w-full md:w-[250px] rounded" />
+                <Skeleton className="h-10 w-full md:w-[250px] rounded" />
+            </div>
+            <div className="mt-8">
+                <Skeleton className="h-96 w-full rounded-lg" />
+            </div>
+        </div>
+    );
 }

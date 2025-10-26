@@ -5,7 +5,7 @@ import "dotenv/config";
 
 const consulta = neon(process.env.DATABASE_URL);
 
-// GET /api/getAttendanceByStudent
+// GET getTeacherInfoByName -> /api/getTeacherInfoByName?name={nombreProfesor}
 export async function GET(request) {
   try {
     const url = new URL(request.url);
@@ -20,25 +20,25 @@ export async function GET(request) {
         }
       );
     }
-    console.log("nombre de la linda", name)
+    console.log("nombre del profesor:", name)
 
-    // Obtener información del profesor, que materias cursa, en que cursos da clases y sus datos.
+    // Obtener información del profesor (nombre) y las materias que enseña.
     const response = await consulta`
 SELECT 
-  t.name AS name,
-  array_agg(s.name) AS subjects
+  t.nombre AS nombre,
+  array_agg(s.nombre) AS materias
 FROM 
-  teacher_subjects ts
+  profesores_materias ts
 JOIN 
-  teachers t ON t.id_teacher = ts.teacher_id
+  profesores t ON t.id_profesor = ts.id_profesor
 JOIN 
-  subjects s ON s.id_subject = ts.subject_id
-WHERE t.name = ${name}
-GROUP BY t.name;
-
+  materias s ON s.id_materia = ts.id_materia
+WHERE t.nombre = ${name}
+GROUP BY t.nombre;
     `;
+    
     // teacher.name -> Nombre del profe
-    // teacher.subjects -> Materias que da el profesor
+    // teacher.materias -> Materias que da el profesor
 
     return new Response(JSON.stringify(response));
   } catch (err) {

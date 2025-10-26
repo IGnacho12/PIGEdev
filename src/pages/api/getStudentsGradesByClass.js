@@ -9,8 +9,8 @@ const consulta = neon(process.env.DATABASE_URL);
 export async function GET(request) {
   try {
     const url = new URL(request.url);
-    const CLASS = url.searchParams.get("class");      // ej: "1º"
-    const SECTION = url.searchParams.get("section");  // ej: "I"
+    const CLASS = url.searchParams.get("class"); // ej: "1º"
+    const SECTION = url.searchParams.get("section"); // ej: "I"
 
     if (!CLASS || !SECTION) {
       return new Response(
@@ -20,33 +20,39 @@ export async function GET(request) {
     }
 
     // Traer alumnos y notas con asistencia
-   const studentsData = await consulta`
-  SELECT
-    s.id AS id_student,
-    s.name AS name,
-    COALESCE(MAX(CASE WHEN g.period = 1 THEN g.grade END), 0) AS nota1,
-    COALESCE(MAX(CASE WHEN g.period = 2 THEN g.grade END), 0) AS nota2,
-    COALESCE(MAX(CASE WHEN g.period = 3 THEN g.grade END), 0) AS nota3,
-    COALESCE(MAX(CASE WHEN g.period = 0 THEN g.grade END), 0) AS finalGrade,
-    COALESCE(COUNT(DISTINCT a.id_attendance), 0) AS attendance
-  FROM students s
-  LEFT JOIN grades g ON s.id = g.id_student
-  LEFT JOIN cursos c ON s.id_curso = c.id_curso
-  LEFT JOIN attendance a ON s.id = a.id_student
-  WHERE c.curso = ${CLASS}
-    AND c.division = ${SECTION}
-  GROUP BY s.id, s.name
-  ORDER BY s.name
-`;
+    const studentsData = await consulta`
+    SELECT
+  s.id_estudiante AS id_estudiante, 
+  s.nombre AS nombre,            
+
+  COALESCE(MAX(CASE WHEN g.periodo = 1 THEN g.calificacion END), 0) AS nota1,
+  COALESCE(MAX(CASE WHEN g.periodo = 2 THEN g.calificacion END), 0) AS nota2,
+  COALESCE(MAX(CASE WHEN g.periodo = 3 THEN g.calificacion END), 0) AS nota3,
+  COALESCE(MAX(CASE WHEN g.periodo = 0 THEN g.calificacion END), 0) AS nota_final,
+
+  COALESCE(COUNT(DISTINCT a.id_asistencia), 0) AS clases_totales,
+  COALESCE(COUNT(DISTINCT CASE WHEN a.estado = 'presente' THEN a.id_asistencia END), 0) AS presentes,
+  COALESCE(COUNT(DISTINCT CASE WHEN a.estado = 'ausente' THEN a.id_asistencia END), 0) AS ausentes,
+  COALESCE(COUNT(DISTINCT CASE WHEN a.estado = 'tarde' THEN a.id_asistencia END), 0) AS tardanzas
+
+FROM estudiantes s                       
+LEFT JOIN notas g ON s.id_estudiante = g.id_estudiante    
+LEFT JOIN cursos c ON s.id_curso = c.id_curso
+LEFT JOIN asistencias a ON s.id_estudiante = a.id_estudiante  
+WHERE c.curso = ${CLASS}
+  AND c.division = ${SECTION}
+GROUP BY s.id_estudiante, s.nombre
+ORDER BY s.nombre;
+    `;
 
     return new Response(JSON.stringify(studentsData), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
   } catch (err) {
-    return new Response(
-      JSON.stringify({ error: err.message }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 }

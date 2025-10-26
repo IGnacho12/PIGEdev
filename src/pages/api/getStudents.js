@@ -6,14 +6,14 @@ const consulta = neon(process.env.DATABASE_URL);
 export async function GET() {
   const response = await consulta`
 SELECT 
-  s.name AS name,
+  s.nombre AS nombre,
   s.dni AS dni,
-  s.id AS id,
-  s.password_value as password_value,
-  s.avatar as avatar,
-  CONCAT(c.curso, ' ', c.division) AS class_and_section
-FROM students s
-JOIN cursos c ON c.id_curso = s.id;
+  s.id_estudiante AS id_estudiante,
+  s.clave_acceso AS clave_acceso,
+  s.avatar AS avatar,
+  CONCAT(c.curso, ' ', c.division) AS curso_y_division
+FROM estudiantes s
+JOIN cursos c ON c.id_curso = s.id_curso;
 `;
 
   return new Response(JSON.stringify(response));

@@ -4,11 +4,14 @@ export default function useTeacherData(teacherName) {
   const { data } = useFetch(
     teacherName ? `/api/getTeacherInfoByName?name=${teacherName}` : null
   );
-  const teacher = Array.isArray(data) ? data[0] : data;
-  const subjects = teacher?.subjects
-    ? Array.isArray(teacher.subjects)
-      ? teacher.subjects
-      : [teacher.subjects]
+
+  const profesor = Array.isArray(data) ? data[0] : data;
+  
+  const materias = profesor?.materias
+    ? Array.isArray(profesor.materias)
+      ? profesor.materias
+      : [profesor.materias]
     : [];
-  return { teacher, subjects };
+    
+  return { profesor, materias };
 }
