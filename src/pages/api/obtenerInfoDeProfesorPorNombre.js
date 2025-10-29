@@ -5,40 +5,37 @@ import "dotenv/config";
 
 const consulta = neon(process.env.DATABASE_URL);
 
-// GET getTeacherInfoByName -> /api/getTeacherInfoByName?name={nombreProfesor}
+// GET obtenerInfoDeProfesorPorNombre -> /api/obtenerInfoDeProfesorPorNombre?nombre={nombreProfesor}
 export async function GET(request) {
   try {
     const url = new URL(request.url);
-    const name = url.searchParams.get("name") || "";
+    const nombre = url.searchParams.get("nombre") || "";
 
-    if (!name) {
+    if (!nombre) {
       return new Response(
-        JSON.stringify({ error: "El parámetro 'name' es requerido" }),
+        JSON.stringify({ error: "El parámetro 'nombre' es requerido" }),
         {
           status: 400,
           headers: { "Content-Type": "application/json" },
         }
       );
     }
-    console.log("nombre del profesor:", name)
+    console.log("nombre del profesor:", nombre);
 
     // Obtener información del profesor (nombre) y las materias que enseña.
     const response = await consulta`
-SELECT 
-  t.nombre AS nombre,
-  array_agg(s.nombre) AS materias
-FROM 
-  profesores_materias ts
-JOIN 
-  profesores t ON t.id_profesor = ts.id_profesor
-JOIN 
-  materias s ON s.id_materia = ts.id_materia
-WHERE t.nombre = ${name}
-GROUP BY t.nombre;
+    SELECT 
+    t.nombre AS nombre,
+    json_agg(s.nombre) AS materias
+    FROM 
+    profesores_materias ts
+    JOIN 
+    profesores t ON t.id_profesor = ts.id_profesor
+    JOIN 
+    materias s ON s.id_materia = ts.id_materia
+    WHERE t.nombre = ${nombre}
+    GROUP BY t.nombre;
     `;
-    
-    // teacher.name -> Nombre del profe
-    // teacher.materias -> Materias que da el profesor
 
     return new Response(JSON.stringify(response));
   } catch (err) {

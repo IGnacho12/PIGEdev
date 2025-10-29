@@ -16,7 +16,7 @@ export default function Hero({ name }) {
             Elige el curso y el alumno, asignale una calificación numérica para
             cada trimestre o cuatrimestre.
           </p>
-          <WaveButton content="Notas" href={`/profesor/notas?name=${name}`} />{" "}
+          <WaveButton content="Notas" href={`/profesor/notas?nombre=${name}`} />{" "}
         </article>
 
         {/* Asistencia */}

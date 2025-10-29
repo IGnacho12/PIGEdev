@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Hero from "./Hero";
-import GradesPage from "./GradesPage";
+import GradesPage from "./PaginaDeNotas";
 import {
   Empty,
   EmptyContent,
@@ -9,7 +9,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
-import TableGrade from "./grades/TableGrades";
+import TableGrade from "./notas/TablaDeNotas";
 
 export default function TeacherPage() {
   const [nombreProfesor, setNombreProfesor] = useState("");
