@@ -21,7 +21,7 @@ const items = [
   },
   {
     title: "Gestión Escolar",
-    url: "estudiante",
+    url: "/estudiante",
     icon: Inbox,
   },
 ];
