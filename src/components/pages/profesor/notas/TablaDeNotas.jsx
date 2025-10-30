@@ -71,7 +71,7 @@ export default function TablaDeNotas({ cursoSeleccionado }) {
 
   // Generar JSON listo para guardar
   const generarJSON = () => {
-    return estudiantes.map((e) => ({
+    const datosAGuardar = estudiantes.map((e) => ({
       id_estudiante: e.id_estudiante,
       nombre: e.nombre,
       nota1: notas[e.id_estudiante]?.nota1 || "",
@@ -79,6 +79,7 @@ export default function TablaDeNotas({ cursoSeleccionado }) {
       nota3: notas[e.id_estudiante]?.nota3 || "",
       nota_final: notas[e.id_estudiante]?.notaFinal || "",
     }));
+    console.log(datosAGuardar)
   };
 
   return (
@@ -171,7 +172,10 @@ export default function TablaDeNotas({ cursoSeleccionado }) {
           </TableBody>
         </Table>
       </article>
-      <BotonGuardar>Guardar Notas</BotonGuardar>
+      <div className="w-full flex justify-center">
+         <BotonGuardar funcion={generarJSON} >Guardar Notas</BotonGuardar>
+      </div>
+     
     </>
   );
 }
@@ -191,10 +195,10 @@ function InputNumber({ value = 0, onChange, important = false }) {
   );
 }
 
-function BotonGuardar({ children }) {
+function BotonGuardar({ children, funcion }) {
   return (
     <>
-      <button class="group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-md dark:bg-white/95 dark:text-black bg-neutral-950 px-6 font-medium text-neutral-200 duration-100 hover:cursor-pointer active:scale-90 hover:scale-105">
+      <button onClick={funcion}  class="group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-md dark:bg-white/95 dark:text-black bg-neutral-950 px-6 font-medium text-neutral-200 duration-100 hover:cursor-pointer active:scale-90 hover:scale-105">
         <div class="translate-x-0 opacity-100 transition group-hover:-translate-x-[150%] group-hover:opacity-0">
           {children}
         </div>

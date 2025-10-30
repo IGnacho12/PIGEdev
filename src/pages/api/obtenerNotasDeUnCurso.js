@@ -1,4 +1,4 @@
-// obtenerNotasDeUnCurso.js -> /api/obtenerNotasDeUnCurso?curso_y_division=1º I
+// /api/obtenerNotasDeUnCurso.js
 export const prerender = false;
 
 import { neon } from "@neondatabase/serverless";
@@ -18,33 +18,32 @@ export async function GET(request) {
       );
     }
 
-    // 🔹 Separar curso y división (espera formato como "1º I")
     const [CLASS, SECTION] = cursoYDivision.split(" ");
 
     if (!CLASS || !SECTION) {
       return new Response(
-        JSON.stringify({ error: "Invalid curso_y_division format. Expected '1º_I'" }),
+        JSON.stringify({ error: "Invalid curso_y_division format. Expected '1º I'" }),
         { status: 400, headers: { "Content-Type": "application/json" } }
       );
     }
 
-    // 🔹 Query a la base de datos
+    // 🔹 Query adaptada al nuevo modelo de la tabla notas
     const studentsData = await consulta`
       SELECT
-        s.id_estudiante AS id_estudiante, 
+        s.id_estudiante AS id_estudiante,
         s.nombre AS nombre,
-        COALESCE(MAX(CASE WHEN g.periodo = 1 THEN g.calificacion END), 0) AS nota1,
-        COALESCE(MAX(CASE WHEN g.periodo = 2 THEN g.calificacion END), 0) AS nota2,
-        COALESCE(MAX(CASE WHEN g.periodo = 3 THEN g.calificacion END), 0) AS nota3,
-        COALESCE(MAX(CASE WHEN g.periodo = 0 THEN g.calificacion END), 0) AS nota_final,
+        COALESCE(AVG(n.nota1), 0) AS nota1,
+        COALESCE(AVG(n.nota2), 0) AS nota2,
+        COALESCE(AVG(n.nota3), 0) AS nota3,
+        COALESCE(AVG(n.nota_final), 0) AS nota_final,
         COALESCE(COUNT(DISTINCT a.id_asistencia), 0) AS clases_totales,
         COALESCE(COUNT(DISTINCT CASE WHEN a.estado = 'presente' THEN a.id_asistencia END), 0) AS presentes,
         COALESCE(COUNT(DISTINCT CASE WHEN a.estado = 'ausente' THEN a.id_asistencia END), 0) AS ausentes,
         COALESCE(COUNT(DISTINCT CASE WHEN a.estado = 'tarde' THEN a.id_asistencia END), 0) AS tardanzas
       FROM estudiantes s
-      LEFT JOIN notas g ON s.id_estudiante = g.id_estudiante
       LEFT JOIN cursos c ON s.id_curso = c.id_curso
-      LEFT JOIN asistencias a ON s.id_estudiante = a.id_estudiante  
+      LEFT JOIN notas n ON s.id_estudiante = n.id_estudiante
+      LEFT JOIN asistencias a ON s.id_estudiante = a.id_estudiante
       WHERE c.curso = ${CLASS}
         AND c.division = ${SECTION}
       GROUP BY s.id_estudiante, s.nombre
