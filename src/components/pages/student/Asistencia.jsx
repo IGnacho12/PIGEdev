@@ -16,7 +16,9 @@ export default function Attendance({ name }) {
   );
 
   if (loading)
-    return <p className="text-center mt-10 text-sm text-gray-500">Cargando...</p>;
+    return (
+      <p className="text-center mt-10 text-sm text-gray-500">Cargando...</p>
+    );
   if (error)
     return (
       <p className="text-center mt-10 text-red-500">
@@ -25,7 +27,7 @@ export default function Attendance({ name }) {
     );
   if (!data) return null;
 
-  const { resumen, attendance } = data;
+  const resumen = data.resumen || [];
 
   // 🧮 Calcular resumen general
   const general = resumen.reduce(
@@ -39,9 +41,10 @@ export default function Attendance({ name }) {
     { totales: 0, presentes: 0, tardanzas: 0, ausentes: 0 }
   );
 
-general.porcentaje = Math.round(
-  ((general.presentes + general.tardanzas) / general.totales) * 100
-);
+  general.porcentaje = Math.round(
+    ((general.presentes + general.tardanzas) / general.totales) * 100
+  );
+
   return (
     <div className="w-full xl:w-4/5 mx-auto mt-10 flex flex-col gap-8 mb-40">
       <main className="flex flex-col xl:flex-row justify-around gap-10">
@@ -73,8 +76,10 @@ general.porcentaje = Math.round(
             <TableHeader>
               <TableRow className="text-center">
                 <TableHead>Materia</TableHead>
-                <TableHead className="font-semibold text-text">Promedio</TableHead>
-                <TableHead>Clases totales</TableHead>
+                <TableHead className="font-semibold text-text">
+                  Asistencia
+                </TableHead>
+                <TableHead>Totales</TableHead>
                 <TableHead>Presentes</TableHead>
                 <TableHead>Tardanzas</TableHead>
                 <TableHead>Ausentes</TableHead>
@@ -84,7 +89,7 @@ general.porcentaje = Math.round(
             <TableBody>
               {resumen.map((m, i) => (
                 <TableRow className="text-center" key={i}>
-                  <TableCell className="text-left">{m.subject}</TableCell>
+                  <TableCell className="text-left">{m.materia}</TableCell>
                   <TableCell className="font-semibold text-text">
                     {m.porcentaje}%
                   </TableCell>

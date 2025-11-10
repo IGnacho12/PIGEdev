@@ -24,18 +24,21 @@ export async function GET(request) {
 
     // Obtener información del profesor (nombre) y las materias que enseña.
     const response = await consulta`
-    SELECT 
-    t.nombre AS nombre,
-    json_agg(s.nombre) AS materias
-    FROM 
-    profesores_materias ts
-    JOIN 
-    profesores t ON t.id_profesor = ts.id_profesor
-    JOIN 
-    materias s ON s.id_materia = ts.id_materia
-    WHERE t.nombre = ${nombre}
-    GROUP BY t.nombre;
-    `;
+  SELECT 
+  t.nombre AS nombre,
+  json_agg(s.nombre) AS materias,
+  json_agg(s.id_materia) AS materias_ids
+FROM 
+  profesores_materias ts
+JOIN 
+  profesores t ON t.id_profesor = ts.id_profesor
+JOIN 
+  materias s ON s.id_materia = ts.id_materia
+WHERE 
+  t.nombre = ${nombre}
+GROUP BY 
+  t.nombre;
+  `;
 
     return new Response(JSON.stringify(response));
   } catch (err) {

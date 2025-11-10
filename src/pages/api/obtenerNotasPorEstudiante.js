@@ -21,18 +21,25 @@ export async function GET(request) {
 
     // Traer todas las notas del alumno por nombre
     const notas = await consulta`
-      SELECT 
-        g.id_nota AS id_nota,
-        g.id_estudiante AS id_estudiante,
-        s.nombre AS materia,
-        g.periodo AS periodo,
-        g.calificacion AS calificacion
-      FROM notas g
-      JOIN materias s ON g.id_materia = s.id_materia
-      JOIN estudiantes st ON g.id_estudiante = st.id_estudiante
-      WHERE st.nombre ILIKE ${`%${name}%`}
-      ORDER BY g.id_materia, g.periodo;
-    `;
+SELECT 
+  n.id_nota,
+  n.id_estudiante,
+  m.nombre AS materia,
+  n.nota1,
+  n.nota2,
+  n.nota3,
+  n.nota_final,
+  CASE 
+    WHEN c.curso >= '4' THEN 'Cuatrimestre'
+    ELSE 'Trimestre'
+  END AS periodo
+FROM public.notas n
+JOIN public.materias m ON n.id_materia = m.id_materia
+JOIN public.estudiantes e ON n.id_estudiante = e.id_estudiante
+JOIN public.cursos c ON e.id_curso = c.id_curso
+WHERE e.nombre ILIKE ${`%${name}%`}
+ORDER BY m.id_materia
+`;
 
     return new Response(JSON.stringify(notas), {
       status: 200,

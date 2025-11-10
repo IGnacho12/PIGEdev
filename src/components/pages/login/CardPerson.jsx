@@ -49,7 +49,7 @@ export default function CardPerson({
             )}
           </article>
           <article className="flex-row flex 	justify-between 	items-center w-full">
-            <span className="text-sm text-left text-gray-700 ">DNI: {dni}</span>
+            <span className="text-sm text-left text-gray-700 dark:text-gray-300 ">DNI: {dni}</span>
              {cursoYDivision && (
                <span className="text-xs text-gray-700">{cursoYDivision}</span>
              )}

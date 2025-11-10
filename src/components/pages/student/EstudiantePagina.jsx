@@ -3,9 +3,9 @@ import React, { useEffect, useState } from "react";
 import useFetch from "@/hooks/useFetch";
 
 import Hero from "./Hero";
-import Notes from "./Notes";
-import Schedule from "./Schedule";
-import Attendance from "./Attendance";
+import Notes from "./Notas";
+import Horario from "./Horario";
+import Attendance from "./Asistencia";
 import {
   Empty,
   EmptyContent,
@@ -32,11 +32,11 @@ export default function StudentPage() {
   return (
     <>
       {nombreAlumno ? (
-        <main className="px-3 xl:p-0 overflow-auto scrollbar-hide space-y-16">
+        <main className="px-3 xl:p-0 space-y-16">
           <Hero name={nombreAlumno}></Hero>
           <Notes nombre={nombreAlumno}></Notes>
           <Attendance name={nombreAlumno}></Attendance>
-          <Schedule></Schedule>
+          <Horario></Horario>
         </main>
       ) : (
         <Empty className="from-muted/50 to-background h-full ">

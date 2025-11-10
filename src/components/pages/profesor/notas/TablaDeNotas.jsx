@@ -188,7 +188,7 @@ function InputNumber({ value = 0, onChange, important = false }) {
       max="10"
       value={value}
       onChange={onChange}
-      className={`w-16 p-1 border border-text-muted/20 rounded-lg px-2 py-1 transition shadow-sm hover:shadow-md text-center ${
+      className={` p-1 border border-text-muted/20 rounded-lg px-2 py-1 transition shadow-sm hover:shadow-md text-center ${
         important ? "font-bold text-lg" : ""
       }`}
     />

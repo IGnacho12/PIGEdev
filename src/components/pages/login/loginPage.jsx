@@ -45,9 +45,7 @@ export default function LoginPage() {
           Puedes filtrar los resultados utilizando nombres o el número del DNI
           correspondiente
           <br />
-          <span className="text-gray-600 font-light">
-            - Por favor informar de algún problema o data faltante -
-          </span>
+   
         </p>
 
         <InputGroup className="w-fit mx-auto mt-12 bg-[var(--bg-light)] dark:bg-[var(--bg-light)]">
@@ -60,7 +58,7 @@ export default function LoginPage() {
           <div className="w-px h-6 bg-border mx-2 my-auto" />
 
           <InputGroupInput
-            placeholder="Mario Antonio del Valle"
+            placeholder="Escribe un nombre aquí!"
             onChange={(e) => setFilter(e.target.value)}
           />
 

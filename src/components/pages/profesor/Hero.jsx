@@ -6,7 +6,7 @@ export default function Hero({ name }) {
     <main className="flex flex-col items-center justify-center w-full">
       <h1 className="text-5xl font-bold">¡Hola {name}!</h1>
       <p>Espero que estés siendo piadoso con los polluelos 🐣</p>
-      <section className="grid grid-cols-3 justify-around w-4/5 gap-5 mt-12">
+      <section className="grid grid-cols-1 xl:grid-cols-3 justify-around w-4/5 gap-5 mt-12">
         {/* Notas */}
         <article className="px-5 py-2 border border-text-muted/20 rounded-sm transition-transform bg-[var(--bg-light)]">
           <h3 className="text-xl font-bold mx-auto">
