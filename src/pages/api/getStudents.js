@@ -16,16 +16,17 @@ export async function GET() {
     JOIN cursos c ON c.id_curso = s.id_curso;
   `;
 
+  // Para que no de problemas llamar a esta api desde Reconocimiento Facial 
   return new Response(JSON.stringify(response), {
     headers: {
       "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",        // 👈 permite acceso desde cualquier origen
+      "Access-Control-Allow-Origin": "*",        // permite acceso desde cualquier origen
       "Access-Control-Allow-Methods": "GET, OPTIONS",
     },
   });
 }
 
-// ✅ opcional: responder correctamente a las preflight requests (CORS OPTIONS)
+// Para que no de problemas llamar a esta api desde Reconocimiento Facial
 export async function OPTIONS() {
   return new Response(null, {
     headers: {

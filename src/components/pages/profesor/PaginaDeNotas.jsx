@@ -25,7 +25,7 @@ export default function GradesPage() {
         ></SelectorDeCursoYMateria>
       </section>
 
-      <TablaDeNotas cursoSeleccionado={cursoSeleccionado} />
+      <TablaDeNotas cursoSeleccionado={cursoSeleccionado} materiaSeleccionada={materiaSeleccionada} />
       {/* Grades Table */}
       {/* <section>
         {loadingStudents ? (
