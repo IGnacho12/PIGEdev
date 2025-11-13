@@ -33,17 +33,23 @@ export async function POST({ request }) {
 
     // 2. Crear un array de promesas de actualización con la conversión de tipos
     const actualizaciones = datosAGuardar.map((estudiante) => {
-                return consulta`
-            UPDATE notas
-            SET 
-              nota1 = ${getValue(estudiante.nota1)},
-              nota2 = ${getValue(estudiante.nota2)},
-              nota3 = ${getValue(estudiante.nota3)},
-              nota_final = ${getValue(estudiante.nota_final)}
-            WHERE 
-              id_estudiante = ${estudiante.id_estudiante}
-              AND id_materia = ${estudiante.id_materia};
-          `;
+      return consulta`
+         INSERT INTO notas (id_estudiante, id_materia, nota1, nota2, nota3, nota_final)
+    VALUES (
+      ${estudiante.id_estudiante},
+      ${estudiante.id_materia},
+      ${getValue(estudiante.nota1)},
+      ${getValue(estudiante.nota2)},
+      ${getValue(estudiante.nota3)},
+      ${getValue(estudiante.nota_final)}
+    )
+    ON CONFLICT (id_estudiante, id_materia)
+    DO UPDATE SET
+      nota1 = EXCLUDED.nota1,
+      nota2 = EXCLUDED.nota2,
+      nota3 = EXCLUDED.nota3,
+      nota_final = EXCLUDED.nota_final;
+  `;
     });
 
     // 3. Ejecutar todas las promesas de actualización en paralelo
