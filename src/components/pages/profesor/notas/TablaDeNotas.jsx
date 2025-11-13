@@ -30,7 +30,7 @@ export default function TablaDeNotas({ cursoSeleccionado, materiaSeleccionada })
   // Obtener estudiantes del backend
   const { data: estudiantesResponse } = useFetch(
     cursoSeleccionado && materiaSeleccionada
-      ? `/api/obtenerNotasDeUnCurso?curso_y_division=${cursoSeleccionado}&materia=${materiaSeleccionada}`
+      ? `/api/notas/obtenerPorCurso?curso_y_division=${cursoSeleccionado}&materia=${materiaSeleccionada}`
       : null
   );
 
@@ -84,7 +84,7 @@ export default function TablaDeNotas({ cursoSeleccionado, materiaSeleccionada })
     console.log(datosAGuardar); // Muestra el JSON que se va a enviar
 
 
-    const response = await fetch("/api/enviarNotas", {
+    const response = await fetch("/api/notas/guardar", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

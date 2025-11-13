@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import useFetch from "@/hooks/useFetch";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import SelectorDeCursoYMateria from "./notas/SelectorDeCursoYMateria";
@@ -15,9 +14,18 @@ export default function GradesPage() {
     console.log("Datos seleccionados,", curso, materia);
   };
 
+  const [nombreProfesor, setNombreProfesor] = useState("");
+  
+    useEffect(() => {
+      const params = new URLSearchParams(window.location.search);
+      const name = params.get("nombre");
+      setNombreProfesor(name || "profesor");
+    }, []);
+
   return (
     <div className="w-full xl:w-4/5 mx-auto space-y-8 mt-12">
-      <h2 className="text-3xl font-semibold text-center">Hola profesor</h2>
+      <h2 className="text-3xl font-semibold text-center mb-0 pb-0">{nombreProfesor}</h2>
+      <p className="text-gray-600 dark:text-gray-300 mt-0 bg-white w-fit mx-auto dark:bg-black">Para poder calificar a tus alumnos primero necesitas elegir un curso y en que materia los calificaras</p>
 
       <section className="flex flex-col md:flex-row gap-4 justify-center">
         <SelectorDeCursoYMateria

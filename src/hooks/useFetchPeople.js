@@ -4,9 +4,9 @@ export default function useFetchPeople(type) {
   // Determinar endpoint solo cuando type es válido
   const endpoint =
     type === "estudiante"
-      ? "/api/getStudents"
+      ? "/api/alumnos/obtener"
       : type === "profesor"
-      ? "/api/getTeachers"
+      ? "/api/profesores/obtener"
       : null;
 
   // Hook siempre llamado, el fetch solo ocurre si endpoint existe

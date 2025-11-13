@@ -14,7 +14,7 @@ import {
 
 export default function Notes({ nombre = "Castillo Ignacio" }) {
   const { data: grades = [], loading } = useFetch(
-    `/api/obtenerNotasPorEstudiante?name=${nombre}`
+    `/api/notas/obtenerPorAlumno?name=${nombre}`
   );
 
   if (loading) return <SkeletonLoader />;

@@ -1,6 +1,5 @@
 // StudentPage.jsx
 import React, { useEffect, useState } from "react";
-import useFetch from "@/hooks/useFetch";
 
 import Hero from "./Hero";
 import Notes from "./Notas";

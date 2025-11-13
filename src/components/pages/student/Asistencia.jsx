@@ -12,7 +12,7 @@ import useFetch from "@/hooks/useFetch";
 
 export default function Attendance({ name }) {
   const { data, loading, error } = useFetch(
-    `/api/getAttendanceByStudent?name=${name}`
+    `/api/alumnos/asistencia/obtenerPorNombre?name=${name}`
   );
 
   if (loading)

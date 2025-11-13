@@ -33,7 +33,7 @@
 
     // Obtener todos los cursos y almacenarlos en curso
     const { data: cursosResponse, loading: cargandoCursos } =
-      useFetch("/api/obtenerCursos");
+      useFetch("/api/cursos/obtener");
     useEffect(() => {
       if (cursosResponse) setCursos(cursosResponse);
     }, [cursosResponse]);
@@ -47,7 +47,7 @@
 
     const { data: InfoProfeResponse, loading: cargandoInfoDeProfesor } = useFetch(
       nombreProfesor
-        ? `/api/obtenerInfoDeProfesorPorNombre?nombre=${nombreProfesor}`
+        ? `/api/profesores/obtenerInfo?nombre=${nombreProfesor}`
         : null
     );
     // setear las materias del profesor

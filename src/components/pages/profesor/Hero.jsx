@@ -3,52 +3,41 @@ import WaveButton from "@/components/shared/buttonsIbelic/waveButon";
 
 export default function Hero({ name }) {
   return (
-    <main className="flex flex-col items-center justify-center w-full">
+    <main className="flex flex-col items-center justify-center w-full text-center">
       <h1 className="text-5xl font-bold">¡Hola {name}!</h1>
-      <p>Espero que estés siendo piadoso con los polluelos 🐣</p>
-      <section className="grid grid-cols-1 xl:grid-cols-3 justify-around w-4/5 gap-5 mt-12">
+      <p className="text-lg text-muted-foreground mt-2">
+        Espero que estés siendo piadoso con los polluelos 🐣
+      </p>
+
+      <section className="grid grid-cols-1 xl:grid-cols-2 gap-8 w-4/5 mt-12">
         {/* Notas */}
-        <article className="px-5 py-2 border border-text-muted/20 rounded-sm transition-transform bg-[var(--bg-light)]">
-          <h3 className="text-xl font-bold mx-auto">
-            Gestiona las calificaciones de tus alumnos
-          </h3>
-          <p>
-            Elige el curso y el alumno, asignale una calificación numérica para
-            cada trimestre o cuatrimestre.
-          </p>
-          <WaveButton content="Notas" href={`/profesor/notas?nombre=${name}`} />{" "}
-        </article>
+        <Card
+          title="Gestiona las calificaciones de tus alumnos"
+          description="Elige el curso y el alumno, asignale una calificación numérica para cada trimestre o cuatrimestre."
+          buttonLabel="Notas"
+          href={`/profesor/notas?nombre=${name}`}
+        />
 
         {/* Asistencia */}
-        <article className="px-5 py-2 border border-text-muted/20 rounded-sm transition-transform bg-[var(--bg-light)]">
-          <h3 className="text-xl font-bold mx-auto">
-            Tomá la asistencia de tus cursos
-          </h3>
-          <p>
-            Seleccioná el curso y registrá la presencia o ausencia de cada
-            alumno del día.
-          </p>
-          <WaveButton
-            content="Asistencia"
-            href={`/profesor/asistencia?name=${name}`}
-          />{" "}
-        </article>
-
-        {/* Otras herramientas */}
-        <article className="px-5 py-2 border border-text-muted/20 rounded-sm transition-transform bg-[var(--bg-light)]">
-          <h3 className="text-xl font-bold mx-auto">
-            Accedé a más herramientas
-          </h3>
-          <p>
-            Explorá funciones adicionales del sistema para facilitar tu gestión
-            docente.
-          </p>
-          <WaveButton
-            content="Herramientas"
-            href={`/profesor/herramientas?name=${name}`}
-          />{" "}
-        </article>
+        <Card
+          title="Tomá la asistencia de tus cursos"
+          description="Seleccioná el curso y registrá la presencia o ausencia de cada alumno del día."
+          buttonLabel="Asistencia"
+          href={`/profesor/asistencia?nombre=${name}`}
+        />
       </section>
     </main>
+  );
+}
+
+function Card({ title, description, buttonLabel, href }) {
+  return (
+    <article className="px-6 py-4 border border-text-muted/20 rounded-md bg-[var(--bg-light)] shadow-sm hover:shadow-md transition-shadow">
+      <h3 className="text-xl font-semibold mb-2">{title}</h3>
+      <p className="text-base text-muted-foreground mb-4">{description}</p>
+      <div className="flex justify-center">
+        <WaveButton content={buttonLabel} href={href} />
+      </div>
+    </article>
   );
 }
