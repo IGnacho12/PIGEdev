@@ -10,7 +10,11 @@ import {
 import { CloudUpload } from "lucide-react";
 import useFetch from "@/hooks/useFetch";
 
-export default function TablaDeAsistencia({ cursoSeleccionado, materiaSeleccionada }) {
+export default function TablaDeAsistencia({
+  cursoSeleccionado,
+  materiaSeleccionada,
+  onAsistenciaChange,
+}) {
   const [estudiantes, setEstudiantes] = useState([]);
   const [asistencias, setAsistencias] = useState({});
 
@@ -20,17 +24,21 @@ export default function TablaDeAsistencia({ cursoSeleccionado, materiaSelecciona
       : null
   );
 
+  // --- CARGAR ESTUDIANTES Y ESTADO POR DEFECTO ---
   useEffect(() => {
     if (estudiantesResponse) {
       setEstudiantes(estudiantesResponse);
+
       const inicial = {};
       estudiantesResponse.forEach((e) => {
-        inicial[e.id_estudiante] = "ausente"; // valor por defecto
+        inicial[e.id_estudiante] = "ausente";
       });
+
       setAsistencias(inicial);
     }
   }, [estudiantesResponse]);
 
+  // --- MARCAR ASISTENCIA ---
   const marcar = (id, estado) => {
     setAsistencias((prev) => ({
       ...prev,
@@ -38,27 +46,56 @@ export default function TablaDeAsistencia({ cursoSeleccionado, materiaSelecciona
     }));
   };
 
+  // --- GUARDAR Y ENVIAR ASISTENCIA AL PADRE ---
   const guardarAsistencia = async () => {
-    const datosAGuardar = estudiantes.map((e) => ({
+  const fechaHoy = new Date();
+  const fechaISO = fechaHoy.toISOString().split("T")[0];
+  const hora = fechaHoy.toTimeString().split(" ")[0];
+
+  const datosAGuardar = estudiantes.map((e) => {
+    const estado = asistencias[e.id_estudiante];
+
+    return {
       id_estudiante: e.id_estudiante,
-      estado: asistencias[e.id_estudiante],
-    }));
+      nombre: e.nombre,
+      estado,
+      curso: cursoSeleccionado,
+      materia: materiaSeleccionada,
+      fecha: fechaISO,
+      hora: estado === "tardanza" ? hora : null,
+    };
+  });
 
-    console.log(datosAGuardar);
+  console.log("📌 Enviando asistencias...");
+  console.table(datosAGuardar);
 
-    const response = await fetch("/api/enviarAsistencia", {
+  try {
+    const response = await fetch("/api/alumnos/asistencia/registrar", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(datosAGuardar),
     });
 
+    const resultado = await response.json();
+
     if (!response.ok) {
-      alert("Error al guardar la asistencia");
+      alert("❌ Error: " + resultado.error);
       return;
     }
 
-    alert("¡Asistencia guardada con éxito!");
-  };
+    alert("✅ Asistencias guardadas correctamente");
+    console.log(resultado);
+
+    // Avisar al padre si hace falta
+    onAsistenciaChange(datosAGuardar);
+  } catch (error) {
+    console.error("Error al enviar asistencias:", error);
+    alert("❌ Error de conexión con el servidor.");
+  }
+};
+
 
   return (
     <>
@@ -84,6 +121,7 @@ export default function TablaDeAsistencia({ cursoSeleccionado, materiaSelecciona
               estudiantes.map((est) => (
                 <TableRow key={est.id_estudiante}>
                   <TableCell>{est.nombre}</TableCell>
+
                   {["presente", "tardanza", "ausente"].map((estado) => (
                     <TableCell className="text-center" key={estado}>
                       <button
@@ -93,8 +131,8 @@ export default function TablaDeAsistencia({ cursoSeleccionado, materiaSelecciona
                             ? estado === "presente"
                               ? "bg-green-500 text-white"
                               : estado === "tardanza"
-                              ? "bg-yellow-400 text-black"
-                              : "bg-red-500 text-white"
+                                ? "bg-yellow-400 text-black"
+                                : "bg-red-500 text-white"
                             : "bg-gray-200 dark:bg-gray-700"
                         }`}
                       >
@@ -110,7 +148,9 @@ export default function TablaDeAsistencia({ cursoSeleccionado, materiaSelecciona
       </article>
 
       <div className="w-full flex justify-center mt-4">
-        <BotonGuardar onClick={guardarAsistencia}>Guardar Asistencia</BotonGuardar>
+        <BotonGuardar onClick={guardarAsistencia}>
+          Guardar Asistencia
+        </BotonGuardar>
       </div>
     </>
   );
