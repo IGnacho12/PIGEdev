@@ -150,16 +150,14 @@ export async function POST({ request }) {
       console.error("Error al hacer rollback:", e);
     }
 
-    return new Response(
-      JSON.stringify({ error: "Error del servidor al guardar asistencias." }),
-      {
-        status: 500,
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-      }
-    );
+    // Para que no de problemas llamar a esta api desde Reconocimiento Facial 
+  return new Response(JSON.stringify(response), {
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",        // permite acceso desde cualquier origen
+      "Access-Control-Allow-Methods": "GET, OPTIONS",
+    },
+  });
   }
 }
 
