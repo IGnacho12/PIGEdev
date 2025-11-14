@@ -23,7 +23,7 @@ export default function GradesPage() {
     }, []);
 
   return (
-    <div className="w-full xl:w-4/5 mx-auto space-y-8 mt-12">
+    <div className="w-full xl:w-4/5 mx-auto space-y-8 mt-12 px-4 md:px-0">
       <h2 className="text-3xl font-semibold text-center mb-0 pb-0">{nombreProfesor}</h2>
       <p className="text-gray-600 dark:text-gray-300 mt-0 bg-white w-fit mx-auto dark:bg-black">Para poder calificar a tus alumnos primero necesitas elegir un curso y en que materia los calificaras</p>
 

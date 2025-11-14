@@ -62,7 +62,7 @@ export default function PaginaDeAsistencia() {
   };
 
   return (
-    <div className="w-full xl:w-4/5 mx-auto space-y-8 mt-12">
+    <div className="w-full xl:w-4/5 mx-auto space-y-8 mt-12 px-4 md:px-0">
       <h2 className="text-3xl font-semibold text-center mb-0 pb-0">
         Asistencia de {nombreProfesor}
       </h2>
@@ -75,7 +75,7 @@ export default function PaginaDeAsistencia() {
         La asistencia solo contará por el día de la fecha ({fechaHoy})
       </p>
 
-      <section className="flex flex-col md:flex-row gap-4 justify-center">
+      <section className="flex flex-col  md:flex-row gap-4 justify-center">
         <SelectorDeCursoYMateria onSelectionChange={obtenerSeleccion} />
       </section>
 
